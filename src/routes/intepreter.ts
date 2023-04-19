@@ -6,10 +6,5 @@ const router = express.Router();
 router.get('/ping', interpreteController.pong);
 
 // interpretar codigo fuente
-//router.post('/interpretar', interpreteController.interpretar);
-
-
-
-
-
+router.post('/interpretar', interpreteController.interpretar);
 export default router;
