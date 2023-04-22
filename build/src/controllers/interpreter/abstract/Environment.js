@@ -5,10 +5,11 @@ const Symbol_1 = require("./Symbol");
 const PrintList_1 = require("../Reports/PrintList");
 class Environment {
     // constructor
-    constructor(anterior) {
+    constructor(anterior, nameenv) {
         this.anterior = anterior;
         this.variables = new Map(); //  mapa de variables
         this.variables = new Map();
+        this.nameenv = nameenv;
     }
     // guardar una nueva variable
     guardar(id, valor, tipo, linea, columna) {
@@ -19,10 +20,25 @@ class Environment {
             // guardar la variable
             // guardar la variable en una tabla de simbolos para el reporte
             env.variables.set(id.toLowerCase(), new Symbol_1.Simbolo(valor, id, tipo));
+            //  ListaTabla.push(new TablaSimbolos())   hace falta metere argumentos que son 5
         }
         else {
             PrintList_1.printlist.push("Error, La variable " + id + " ya existe en el entorno, linea " + linea + " y columna " + columna);
         }
+    }
+    getVar(id) {
+        //verificar si el amiente no es nulo
+        let env = this;
+        // buscar la variable en el entorno actual
+        while (env != null) {
+            // verificar si la variable existe
+            if (env.variables.has(id.toLowerCase())) {
+                return env.variables.get(id.toLowerCase());
+            }
+            // buscar en el entorno anterior
+            env = env.anterior;
+        }
+        return null;
     }
 }
 exports.Environment = Environment;

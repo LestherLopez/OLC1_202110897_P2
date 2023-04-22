@@ -1,6 +1,18 @@
 import logo from './logo.svg';
 import './App.css';
+import Layout from './components/Layout';
 
+function App() {
+  return (
+    <div className="App">
+       <Layout>
+      </Layout>
+    </div>
+  );
+}
+
+
+/*
 function App() {
   return (
     <div className="App">
@@ -21,5 +33,5 @@ function App() {
     </div>
   );
 }
-
+*/
 export default App;

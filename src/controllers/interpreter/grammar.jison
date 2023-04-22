@@ -132,6 +132,10 @@
   const {Access} = require('./expression/Access');
   const {Arithmetic} = require('./expression/Arithmetic');
   const {TipoAritmetica} = require('./utils/TipoAritmetica');
+  const {Logic} = require('./expression/Logic');
+  const {TipoLogica} = require('./utils/TipoLogica');
+  const {Relational} = require('./expression/Relational');
+  const {TipoRelacional} = require('./utils/TipoRelacional');
  // const {If} = require('./instruction/If');
  // const {While} = require('./instruction/While');
  // const {Function} = require('./instruction/Function');
@@ -141,18 +145,20 @@
 %}
 
 
-// PRECEDENCIA DE OPERADORES
-%left 'MAS' 'MENOS'
-%left 'POR' 'DIVISION' 'MODULO'
-%right 'UMENOS' 
 
-%left '++' '--'
-%left 'POTENCIA'
-%right 'NOT' 'PARIZQ'
-%left 'OR'
-%left 'AND'
-%left 'DIFERENCIACION' 'IGUALACION' 
-%left 'MENORQUE' 'MAYORQUE' 'MENOROIGUALQUE' 'MAYOROIGUALQUE' 
+
+// PRECEDENCIA DE OPERADORES
+%left 'MAS' 'MENOS' //3
+%left 'POR' 'DIVISION' 'MODULO' //2
+%right 'UMENOS' //0
+
+%left 'AUMENTO' 'REDUCCION'
+%left 'POTENCIA'//1X
+%right 'NOT'//5 
+%left 'OR'//7
+%left 'AND'//6
+%left 'DIFERENCIACION' 'IGUALACION'  //4
+%left 'MENORQUE' 'MAYORQUE' 'MENOROIGUALQUE' 'MAYOROIGUALQUE' //4
 
 
 
@@ -183,7 +189,13 @@ INSTRUCCION
   | DIF                { $$ = $1; }
   | WHILE             { $$ = $1; }
   | LLAMAR_FUNCION    { $$ = $1; } //AQUI LLEVA PT COMA
-	| error PTCOMA
+	| INCREMENTOYDECREMENTO PTCOMA { $$ = $1; }
+  | VECTOR  { $$ = $1; }
+  | MODIFICARVECTOR { $$ = $1; }
+  | LISTA { $$ = $1; }
+  | AGREGARVALORLISTA { $$ = $1; }
+  | MODIFICARVALORLISTA { $$ = $1; }
+  | error PTCOMA
   {   console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);}
 ;
 
@@ -200,6 +212,7 @@ DEFPRINT
 DECLARAR
     : TIPO ID PTCOMA  { $$ = new Todeclare($2,$1,null,@1.first_line, @1.first_column ); }
     | TIPO ID IGUAL EXPRESION PTCOMA  { $$ = new Todeclare($2,$1,$4,@1.first_line, @1.first_column ); }
+    | TIPO ID IGUAL PARIZQ TIPO PARDER EXPRESION          //CASTEO
 ;
 // GRAMNATICA PARA DECLARAR FUINCIONES
 FUNCION 
@@ -232,26 +245,71 @@ LISTA_EXPRESIONES
   | EXPRESION { $$ = [$1] }
 ;
 
+VECTOR
+  : TIPO CORIZR CORDER ID IGUAL NEW TIPO CORIZR ENTERO CORDER PTCOMA 
+  | TIPO CORIZR CORDER ID IGUAL LLAVEIZQ LISTA_EXPRESIONES LLAVEDER PTCOMA
+;
+MODIFICARVECTOR
+  : ACCEDERVECTOR IGUAL EXPRESION PTCOMA
+;
+
+
+//DECLARAR LISTA
+LISTA 
+  : LIST MENORQUE TIPO MAYORQUE ID IGUAL NEW LIST MENORQUE TIPO MAYORQUE PTCOMA
+;
+AGREGARVALORLISTA
+  : ACCEDERID PUNTO PARIZQ EXPRESION PARDER PTCOMA
+;
+MODIFICARVALORLISTA
+  : ACCEDERLISTA IGUAL EXPRESION PTCOMA
+;
 
 EXPRESION
   : PRIMITIVO                           { $$ = $1; }
   | EXPRESION MAS EXPRESION             { $$ = new Arithmetic($1,$3,TipoAritmetica.SUMA,@1.first_line, @1.first_column); }
   | EXPRESION MENOS EXPRESION           { $$ = new Arithmetic($1,$3,TipoAritmetica.RESTA,@1.first_line, @1.first_column); }
-  | EXPRESION DIVISION EXPRESION
-  | EXPRESION POR EXPRESION
-  | MENOS EXPRESION %prec UMENOS        { $$ = new Aritmetica($2,$2,TipoAritmetica.UMENOS,@1.first_line, @1.first_column); }  
-  | ID                                  { $$ = new Access($1,@1.first_line, @1.first_column); }
+  | EXPRESION DIVISION EXPRESION        { $$ = new Arithmetic($1,$3,TipoAritmetica.DIVISION,@1.first_line, @1.first_column); }  
+  | EXPRESION POR EXPRESION             { $$ = new Arithmetic($1,$3,TipoAritmetica.MULTIPLICACION,@1.first_line, @1.first_column); }  
+  | MENOS EXPRESION %prec UMENOS        { $$ = new Arithmetic($2,$2,TipoAritmetica.MENOSUNARIO,@1.first_line, @1.first_column); }  
+  | EXPRESION POTENCIA EXPRESION        { $$ = new Arithmetic($1,$3,TipoAritmetica.POTENCIA,@1.first_line, @1.first_column); }  
+  | EXPRESION MODULO EXPRESION          { $$ = new Arithmetic($1,$3,TipoAritmetica.MODULO,@1.first_line, @1.first_column); }  
+  | ACCEDERID                            { $$ = $1; }
   | LLAMAR_FUNCION                      { $$ = $1; }
   | PARIZQ EXPRESION PARDER             { $$ = $2;}
-  | EXPRESION AND EXPRESION
-  | EXPRESION OR EXPRESION
-  | EXPRESION IGUALACION EXPRESION
-  | EXPRESION DIFERENCIACION EXPRESION
-  | EXPRESION MENORQUE EXPRESION
-  | EXPRESION MENOROIGUALQUE EXPRESION
-  | EXPRESION MAYORQUE EXPRESION
-  | EXPRESION MAYOROIGUALQUE EXPRESION
+  | EXPRESION AND EXPRESION             { $$ = new Logic($1,$3,TipoLogica.AND,@1.first_line, @1.first_column); }  
+  | EXPRESION OR EXPRESION              { $$ = new Logic($1,$3,TipoLogica.OR,@1.first_line, @1.first_column); }  
+  | NOT EXPRESION                       { $$ = new Logic($2,$2,TipoLogica.NOT,@1.first_line, @1.first_column); }  
+  | EXPRESION IGUALACION EXPRESION      { $$ = new Relational($1,$3,TipoRelacional.IGUAL,@1.first_line, @1.first_column); } 
+  | EXPRESION DIFERENCIACION EXPRESION  { $$ = new Relational($1,$3,TipoRelacional.DIFERENTE,@1.first_line, @1.first_column); } 
+  | EXPRESION MENORQUE EXPRESION        { $$ = new Relational($1,$3,TipoRelacional.MENOR,@1.first_line, @1.first_column); } 
+  | EXPRESION MENOROIGUALQUE EXPRESION  { $$ = new Relational($1,$3,TipoRelacional.MENOROIGUAL,@1.first_line, @1.first_column); } 
+  | EXPRESION MAYORQUE EXPRESION        { $$ = new Relational($1,$3,TipoRelacional.MAYOR,@1.first_line, @1.first_column); } 
+  | EXPRESION MAYOROIGUALQUE EXPRESION  { $$ = new Relational($1,$3,TipoRelacional.MAYORIGUAL,@1.first_line, @1.first_column); } 
+	| INCREMENTOYDECREMENTO             { $$ = $1; }
+  | ACCEDERVECTOR                      { $$ = $1; }
+  | ACCEDERLISTA                      { $$ = $1; }
+  | OPERADORTERNARIO                   { $$ = $1; }
+;
 
+ACCEDERLISTA
+  : ACCEDERID CORIZR CORIZR EXPRESION CORDER CORDER 
+;
+
+
+
+ACCEDERVECTOR 
+  : ACCEDERID LLAVEIZQ EXPRESION LLAVEDER
+;
+
+
+ACCEDERID 
+  : ID       { $$ = new Access($1,@1.first_line, @1.first_column); }
+;
+//INCREMENTO Y DECREMENTO
+INCREMENTOYDECREMENTO
+  : ACCEDERID AUMENTO
+  | ACCEDERID REDUCCION
 ;
 
 
@@ -273,3 +331,6 @@ TIPO
   | RCHAR           { $$ = Type.CHAR; }
   | RBOOLEAN        { $$ = Type.BOOLEAN; }
 ;
+
+
+//ternarios
