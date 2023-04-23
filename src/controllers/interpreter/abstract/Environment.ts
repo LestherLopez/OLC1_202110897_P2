@@ -1,9 +1,12 @@
 import { Simbolo } from "./Symbol";
 import { Type } from "./Return";
 import { printlist } from "../Reports/PrintList";
+import { Function } from "../instruction/Function";
 import { ListaTabla, TablaSimbolos } from "../Reports/TablaSimbolos";
 export class Environment {
     private variables = new Map<string, Simbolo>();   //  mapa de variables
+    private funciones = new Map<string, Function>();
+    
     private nameenv: string;  
     
     // constructor
@@ -42,6 +45,56 @@ public getVar(id: string): Simbolo | null {
   }  
   return null;  
 }
+  //guardar nueva funcion
+  public guardarFuncion(id: string, funcion: Function) {
+    // verificar el ambito
+    let env: Environment | null = this;
+
+    // verificar si la funcion ya existe
+    if (!env.funciones.has(id.toLowerCase())) {
+      // guardar la variable
+      // guardar la variable en una tabla de simbolos para el reporte
+      env.funciones.set(id.toLowerCase(),funcion);
+    }else {
+      printlist.push("Error, La funcion "+id+" ya existe en el entorno");
+    }
+  }
+  //obtener funcion
+  public getFuncion(id: string): Function | null {
+    // verificar el ambito
+    let env: Environment | null = this;
+
+    // buscar la variable
+    while (env != null) {
+      // verificar si la variable existe
+      if (env.funciones.has(id.toLowerCase())) {
+        // retornar la variable
+        return env.funciones.get(id.toLowerCase())!;
+      }
+      // cambiar de ambito
+      env = env.anterior;
+    }
+
+    // retornar null si no se encontro la variable
+    return null;
+  }
+
+  // obtener el entorno global
+  public getGlobal(): Environment {
+    // verificar el ambito
+    let env: Environment | null = this;
+
+    // buscar la variable
+    while (env.anterior != null) {
+      // cambiar de ambito
+      env = env.anterior;
+    }
+    // retornar el entorno global
+    return env;
+  }
+
+
+
 
 }
     

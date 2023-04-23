@@ -136,6 +136,11 @@
   const {TipoLogica} = require('./utils/TipoLogica');
   const {Relational} = require('./expression/Relational');
   const {TipoRelacional} = require('./utils/TipoRelacional');
+  const {Statement} = require('./instruction/Statement');
+  const {Function} = require('./instruction/Function');
+  const {Parameters} = require('./expression/Parameters');
+  const {ObtenerFunction} = require('./expression/ObtenerFunction');
+ 
  // const {If} = require('./instruction/If');
  // const {While} = require('./instruction/While');
  // const {Function} = require('./instruction/Function');
@@ -157,8 +162,7 @@
 %right 'NOT'//5 
 %left 'OR'//7
 %left 'AND'//6
-%left 'DIFERENCIACION' 'IGUALACION'  //4
-%left 'MENORQUE' 'MAYORQUE' 'MENOROIGUALQUE' 'MAYOROIGUALQUE' //4
+%left 'IGUALACION' 'DIFERENCIACION' 'MENORQUE' 'MAYORQUE' 'MENOROIGUALQUE' 'MAYOROIGUALQUE' //4
 
 
 
@@ -178,17 +182,17 @@ INSTRUCCIONES
 
 
 BLOQUE_INSTRUCCIONES 
-  : LLAVEIZQ INSTRUCCIONES LLAVEDER  { $$ = $2; }
-  |  LLAVEIZQ LLAVEDER            { $$ = []; }
+  : LLAVEIZQ INSTRUCCIONES LLAVEDER  { $$ = new Statement($2,@1.first_line, @1.first_column); }
+  |  LLAVEIZQ LLAVEDER            { $$ = new Statement([],@1.first_line, @1.first_column); }
 ;
 
 INSTRUCCION
 	: DEFPRINT          { $$ = $1; }
   | DECLARAR          { $$ = $1; }
-  | FUNCION           { $$ = $1; }
+  | FUNCION           { $$ = $1; } 
   | DIF                { $$ = $1; }
   | WHILE             { $$ = $1; }
-  | LLAMAR_FUNCION    { $$ = $1; } //AQUI LLEVA PT COMA
+  | LLAMAR_FUNCION  PTCOMA  { $$ = $1; } //AQUI LLEVA PT COMA
 	| INCREMENTOYDECREMENTO PTCOMA { $$ = $1; }
   | VECTOR  { $$ = $1; }
   | MODIFICARVECTOR { $$ = $1; }
@@ -216,10 +220,19 @@ DECLARAR
 ;
 // GRAMNATICA PARA DECLARAR FUINCIONES
 FUNCION 
-   : TIPO ID PARIZQ LISTA_PARAMETROS PARDER BLOQUE_INSTRUCCIONES// { $$ = new Function($1, $2, $4, $6, @2.first_line, @2.first_column); }
-   | TIPO ID PARIZQ PARDER BLOQUE_INSTRUCCIONES// { $$ = new Function($1, $2, [], $5, @2.first_line, @2.first_column); }
+   : TIPO ID PARIZQ LISTA_PARAMETROS PARDER BLOQUE_INSTRUCCIONES  { $$ = new Function($1,$2,$4,$6,@1.first_line, @1.first_column ); }
+   | TIPO ID PARIZQ PARDER BLOQUE_INSTRUCCIONES                 { $$ = new Function($1,$2,[],$5,@1.first_line, @1.first_column ); }
    | VOID ID PARIZQ LISTA_PARAMETROS PARDER BLOQUE_INSTRUCCIONES //{ $$ = new Function(new Tipo(TipoPrimitivo.Void), $2, $4, $6, @2.first_line, @2.first_column); }
    | VOID ID PARIZQ PARDER BLOQUE_INSTRUCCIONES //{    $$ = new Function(new Tipo(TipoPrimitivo.Void), $2, [], $5, @2.first_line, @2.first_column); }
+;
+
+LISTA_PARAMETROS
+  : LISTA_PARAMETROS COMA PARAMETRO  { $1.push($3); $$ = $1; }
+  | PARAMETRO                        { $$ = [$1]; }
+;
+
+PARAMETRO
+  : TIPO ID {$$ = new Parameters($1,$2,@1.first_line, @1.first_column);}
 ;
 //BLOQUE EDE IF, ELSE IF Y ELSE
 DIF 
@@ -238,12 +251,15 @@ DWHILE
 
 //GRAMATICA PARA LLAMAR A UNA FUNCION
 LLAMAR_FUNCION 
-  : ID PARIZQ LISTA_EXPRESIONES PARDER //{ $$ = new ObtenerFunction($1, $3, @1.first_line, @1.first_column); }
+  : ID PARIZQ LISTA_EXPRESIONES PARDER { $$ = new ObtenerFunction($1,$3,@1.first_line, @1.first_column); }
+  | ID PARIZQ PARDER { $$ = new ObtenerFunction($1,[],@1.first_line, @1.first_column); }
+
 ;
 LISTA_EXPRESIONES
   : LISTA_EXPRESIONES COMA EXPRESION { $1.push($3); $$ = $1; }
   | EXPRESION { $$ = [$1] }
 ;
+
 
 VECTOR
   : TIPO CORIZR CORDER ID IGUAL NEW TIPO CORIZR ENTERO CORDER PTCOMA 
@@ -283,7 +299,7 @@ EXPRESION
   | EXPRESION IGUALACION EXPRESION      { $$ = new Relational($1,$3,TipoRelacional.IGUAL,@1.first_line, @1.first_column); } 
   | EXPRESION DIFERENCIACION EXPRESION  { $$ = new Relational($1,$3,TipoRelacional.DIFERENTE,@1.first_line, @1.first_column); } 
   | EXPRESION MENORQUE EXPRESION        { $$ = new Relational($1,$3,TipoRelacional.MENOR,@1.first_line, @1.first_column); } 
-  | EXPRESION MENOROIGUALQUE EXPRESION  { $$ = new Relational($1,$3,TipoRelacional.MENOROIGUAL,@1.first_line, @1.first_column); } 
+  | EXPRESION MENOROIGUALQUE EXPRESION  { $$ = new Relational($1,$3,TipoRelacional.MENORIGUAL,@1.first_line, @1.first_column); } 
   | EXPRESION MAYORQUE EXPRESION        { $$ = new Relational($1,$3,TipoRelacional.MAYOR,@1.first_line, @1.first_column); } 
   | EXPRESION MAYOROIGUALQUE EXPRESION  { $$ = new Relational($1,$3,TipoRelacional.MAYORIGUAL,@1.first_line, @1.first_column); } 
 	| INCREMENTOYDECREMENTO             { $$ = $1; }

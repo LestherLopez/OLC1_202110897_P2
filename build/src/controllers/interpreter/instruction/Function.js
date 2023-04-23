@@ -1,29 +1,19 @@
 "use strict";
-/*import { Environment } from "../abstract/Environment";
-import { Expression } from "../abstract/Expression";
-//import { AST } from "../Entorno/AST";
-import { Instruction } from "../abstract/Instruction";
-//import { Nodo } from "../Entorno/Nodo";
-import { Type } from "../abstract/Return";
-import { Todeclare } from "./Todeclare";
-
-export class Function extends Instruction {
-    
-    private nombre      : string;
-    private tipo    : Type;
-    private parametros  : Expression[];
-    sentencias  : Instruction[];
-
-    constructor(tipo :Type ,nombre : string, parametros :DeclararVariable[], sentencias: Nodo[], linea :number, columna :number) {
-        super(linea, columna);
-
-        this.nombre = nombre;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Function = void 0;
+const Instruction_1 = require("../abstract/Instruction");
+class Function extends Instruction_1.Instruction {
+    constructor(tipo, id, parametros, statement, line, column) {
+        super(line, column);
+        this.tipo = tipo;
+        this.id = id;
         this.parametros = parametros;
-        this.sentencias = sentencias;
+        this.statement = statement;
     }
-
-    public execute(actual: Ambito, global: Ambito, ast: AST) {
-        throw new Error("Method not implemented.");
+    execute(env) {
+        // guardar la funcion en entorno
+        env.guardarFuncion(this.id, this);
     }
-}*/ 
+}
+exports.Function = Function;
 //# sourceMappingURL=Function.js.map

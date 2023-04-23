@@ -8,6 +8,7 @@ class Environment {
     constructor(anterior, nameenv) {
         this.anterior = anterior;
         this.variables = new Map(); //  mapa de variables
+        this.funciones = new Map();
         this.variables = new Map();
         this.nameenv = nameenv;
     }
@@ -39,6 +40,49 @@ class Environment {
             env = env.anterior;
         }
         return null;
+    }
+    //guardar nueva funcion
+    guardarFuncion(id, funcion) {
+        // verificar el ambito
+        let env = this;
+        // verificar si la funcion ya existe
+        if (!env.funciones.has(id.toLowerCase())) {
+            // guardar la variable
+            // guardar la variable en una tabla de simbolos para el reporte
+            env.funciones.set(id.toLowerCase(), funcion);
+        }
+        else {
+            PrintList_1.printlist.push("Error, La funcion " + id + " ya existe en el entorno");
+        }
+    }
+    //obtener funcion
+    getFuncion(id) {
+        // verificar el ambito
+        let env = this;
+        // buscar la variable
+        while (env != null) {
+            // verificar si la variable existe
+            if (env.funciones.has(id.toLowerCase())) {
+                // retornar la variable
+                return env.funciones.get(id.toLowerCase());
+            }
+            // cambiar de ambito
+            env = env.anterior;
+        }
+        // retornar null si no se encontro la variable
+        return null;
+    }
+    // obtener el entorno global
+    getGlobal() {
+        // verificar el ambito
+        let env = this;
+        // buscar la variable
+        while (env.anterior != null) {
+            // cambiar de ambito
+            env = env.anterior;
+        }
+        // retornar el entorno global
+        return env;
     }
 }
 exports.Environment = Environment;
