@@ -21,7 +21,16 @@ export class Todeclare extends Instruction {
     if (this.valor != null) {
       const val = this.valor.execute(env);
       env.guardar(this.id, val.value, this.tipo, this.line, this.column);
-    } else {
+    }else if(this.tipo==null){ 
+      const value = env.getVar(this.id);
+      if(value ){
+        value.valor = this.valor;
+      }else{
+
+      }
+      
+      
+    }else {
       // guardar los valores por defecto segun el tipo (ver el enunciado)
       env.guardar(this.id, null, this.tipo, this.line, this.column);
     }

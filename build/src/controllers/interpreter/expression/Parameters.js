@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Parametros = void 0;
+exports.Parameters = void 0;
 const Expression_1 = require("../abstract/Expression");
-class Parametros extends Expression_1.Expression {
+class Parameters extends Expression_1.Expression {
     constructor(tipo, id, line, column) {
         super(line, column);
         this.tipo = tipo;
@@ -13,5 +13,5 @@ class Parametros extends Expression_1.Expression {
         return { value: this.id, type: this.tipo };
     }
 }
-exports.Parametros = Parametros;
+exports.Parameters = Parameters;
 //# sourceMappingURL=Parameters.js.map

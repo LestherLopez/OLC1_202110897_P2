@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LlamadaFuncion = void 0;
+exports.ObtenerFunction = void 0;
 const Expression_1 = require("../abstract/Expression");
 const Environment_1 = require("../abstract/Environment");
-class LlamadaFuncion extends Expression_1.Expression {
+class ObtenerFunction extends Expression_1.Expression {
     constructor(id, argumentos, line, column) {
         super(line, column);
         this.id = id;
@@ -33,7 +33,7 @@ class LlamadaFuncion extends Expression_1.Expression {
                     }
                 }
                 // ejecutar el cuerpo de la funcion
-                funcion.statement.execute(envFun);
+                funcion.statement.execute(envFun, this.id);
             }
             else {
                 console.log("Error, La funcion " + this.id + " no tiene la cantidad de parametros correcta, linea " + this.line + " y columna " + this.column);
@@ -44,5 +44,5 @@ class LlamadaFuncion extends Expression_1.Expression {
         }
     }
 }
-exports.LlamadaFuncion = LlamadaFuncion;
+exports.ObtenerFunction = ObtenerFunction;
 //# sourceMappingURL=ObtenerFunction.js.map

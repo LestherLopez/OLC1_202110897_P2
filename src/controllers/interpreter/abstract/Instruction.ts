@@ -7,6 +7,6 @@ export abstract class Instruction{
         this.line = line
         this.column = column
     }
-    public abstract execute(env:Environment):any;
+    public abstract execute(env:Environment, id: string):any;
   
   }

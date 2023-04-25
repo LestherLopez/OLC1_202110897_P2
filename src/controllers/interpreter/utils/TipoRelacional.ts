@@ -4,6 +4,7 @@ export enum TipoRelacional {
     MENOR,
     MENORIGUAL,
     MAYOR,
-    MAYORIGUAL
+    MAYORIGUAL,
+
 }
   

@@ -8,14 +8,19 @@ class Statement extends Instruction_1.Instruction {
         super(line, column);
         this.body = body;
     }
-    execute(env) {
+    execute(env, id) {
         const newEnv = new Environment_1.Environment(env, "Funcion");
         for (const instrucciones of this.body) {
             try {
-                const ret = instrucciones.execute(newEnv);
+                const ret = instrucciones.execute(newEnv, id);
                 // si la instruccion es un return, retornar el valor
                 if (ret != null && ret != undefined) {
+                    //const funcion = env.getFuncion(id);
+                    // if(funcion?.tipo!=Type.VOID){
                     return ret;
+                    // }else{
+                    return;
+                    // }
                 }
             }
             catch (e) {

@@ -2,30 +2,37 @@ import { Environment } from "../abstract/Environment";
 //import { AST } from "../Entorno/AST";
 import { Expression } from "../abstract/Expression";
 import { Instruction } from "../abstract/Instruction";
-import { Nodo } from "../abstract/Nodo";
+
 
 export class While extends Instruction{
     
-    private exp: Expression;
-    sentencias : Instruction[];
+    exp: Expression;
+    sentencias : Instruction;
 
-    constructor(exp: Expression, sentencias : Instruction[], linea: number, columna: number){
+    constructor(exp: Expression, sentencias : Instruction, linea: number, columna: number){
         super(linea, columna);
         this.exp = exp;
         this.sentencias = sentencias;
     }
 
-    public execute(env: Environment): void {
-       while (this.exp.execute(env).value) {
-      
-        for(let sentencia of this.sentencias){
-            sentencia.execute(env);
-        }
-    }  
-    }
+    public execute(env: Environment) {
+        let condicional = this.exp.execute(env);
+        //creacion de entorno
+        
+        let environment_while =  new Environment(env, "while");
+        while(condicional.value){
+            this.sentencias.execute(environment_while, "while");
+            condicional = this.exp.execute(environment_while);
+        
+        }    
+    
+        // condicional.value = this.exp.execute(env).value;
+        
+        }  
+}
 
     //hace falta meter valores de AST en el execute ya cuando se tenga el AST
 
-}
+
 
 

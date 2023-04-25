@@ -2,11 +2,12 @@ import { Simbolo } from "./Symbol";
 import { Type } from "./Return";
 import { printlist } from "../Reports/PrintList";
 import { Function } from "../instruction/Function";
+import { Method } from "../instruction/Method";
 import { ListaTabla, TablaSimbolos } from "../Reports/TablaSimbolos";
 export class Environment {
     private variables = new Map<string, Simbolo>();   //  mapa de variables
     private funciones = new Map<string, Function>();
-    
+    private metodos = new Map<string, Method>();
     private nameenv: string;  
     
     // constructor
@@ -78,6 +79,41 @@ public getVar(id: string): Simbolo | null {
     // retornar null si no se encontro la variable
     return null;
   }
+  // guardar metodo
+  public guardarMetodo(id: string, metodo: Method){
+    // verificar el ambito
+    let env: Environment | null = this;
+
+    // verificar si la funcion ya existe
+    if (!env.metodos.has(id.toLowerCase())) {
+      // guardar la variable
+      // guardar la variable en una tabla de simbolos para el reporte
+      env.metodos.set(id.toLowerCase(),metodo);
+    }else {
+      printlist.push("Error, La funcion "+id+" ya existe en el entorno");
+    }
+  }
+  //obtener metodo
+  public getMetodo(id: string): Method | null {
+    // verificar el ambito
+    let env: Environment | null = this;
+
+    // buscar la variable
+    while (env != null) {
+      // verificar si la variable existe
+      if (env.metodos.has(id.toLowerCase())) {
+        // retornar la variable
+        return env.metodos.get(id.toLowerCase())!;
+      }
+      // cambiar de ambito
+      env = env.anterior;
+    }
+
+    // retornar null si no se encontro la variable
+    return null;
+  }
+
+
 
   // obtener el entorno global
   public getGlobal(): Environment {

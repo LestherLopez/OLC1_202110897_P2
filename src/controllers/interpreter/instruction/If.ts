@@ -1,47 +1,70 @@
-/*import exp from "constants";
 import { Environment } from "../abstract/Environment";
-//import { AST } from "../Entorno/AST";
 import { Expression } from "../abstract/Expression";
 import { Instruction } from "../abstract/Instruction";
-//import { Nodo } from "../Entorno/Nodo";
-import { Type } from "../abstract/Return";
+import { Return, Type } from "../abstract/Return";
+export class If extends Instruction{
+    exp_condicion: Expression;
+    public sentencias:Instruction;
+    public sentencias_else: Instruction;
+    constructor( exp_condicion:Expression, sentencias:Instruction, sentencias_else:Instruction, line:number, column:number)
+    {
+        super(line, column);
+        this.exp_condicion = exp_condicion;
+        this.sentencias = sentencias;
+        this.sentencias_else = sentencias_else;
+    }
+    public execute(env: Environment) {
+        let condicion = this.exp_condicion.execute(env);
+        if(condicion.type!= Type.BOOLEAN){
+            return null;
+        }
+        if(condicion.value){
+            let new_environment =  new Environment(env, "null");
+            this.sentencias.execute(new_environment, "if");
 
-export class If extends Instruction {
+        }else{
+            let else_environment = new Environment(env, "null");
+            this.sentencias_else.execute(else_environment, "else");
+        }
+    }
+}
+/*
+export class If extends Instruccion {
     
-    private exp_condicion   : Expression;
-    private sentencias      : string[];
-    private sentencias_else : string[];
+    exp_condicion   : Expresion;
+    sentencias      : Nodo[];
+    sentencias_else : Nodo[];
 
-    constructor(exp_condicion :Expression, sentencias :Nodo[], sentencias_else :Nodo[], linea :number, columna :number) {
+    constructor(exp_condicion :Expresion, sentencias :Nodo[], sentencias_else :Nodo[], linea :number, columna :number) {
         super(linea, columna);
         this.exp_condicion = exp_condicion;
         this.sentencias = sentencias;
         this.sentencias_else = sentencias_else;
     }
     
-    public execute(actual: Environment, global: Environment, ast: AST) {
+    public ejecutar(actual: Ambito, global: Ambito, ast: AST) {
         // Condicion
         let condicion = this.exp_condicion.getValor(actual, global, ast);
 
         // Verificar tipo booleano
-        if(this.exp_condicion.tipo.getPrimitivo() != Type.Boolean) {
+        if(this.exp_condicion.tipo.getPrimitivo() != TipoPrimitivo.Boolean) {
             // * ERROR * 
             return
         }
 
         if ( condicion ){
-            // Crear Environment nuevo
-            let Environment_if = new Environment(actual);
+            // Crear ambito nuevo
+            let ambito_if = new Ambito(actual);
 
             for(let sentencia of this.sentencias){
-                if(sentencia instanceof Instruction) sentencia.ejecutar(Environment_if, global, ast);
-                if(sentencia instanceof Expression) sentencia.getValor(Environment_if, global, ast);
+                if(sentencia instanceof Instruccion) sentencia.ejecutar(ambito_if, global, ast);
+                if(sentencia instanceof Expresion) sentencia.getValor(ambito_if, global, ast);
             }
         }else {
-            let Environment_else = new Environment(actual);
+            let ambito_else = new Ambito(actual);
             for(let sentencia of this.sentencias_else){
-                if(sentencia instanceof Instruction) sentencia.ejecutar(Environment_else, global, ast);
-                if(sentencia instanceof Expression) sentencia.getValor(Environment_else, global, ast);
+                if(sentencia instanceof Instruccion) sentencia.ejecutar(ambito_else, global, ast);
+                if(sentencia instanceof Expresion) sentencia.getValor(ambito_else, global, ast);
             }
         }
     }

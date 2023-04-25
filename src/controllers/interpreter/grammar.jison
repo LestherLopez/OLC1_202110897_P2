@@ -4,6 +4,11 @@
 %options case-insensitive
 %x string
 
+int                         (?:[0-9]|[1-9][0-9]+)
+
+frac                        (?:\.[0-9]+)
+
+
 %%
 
 
@@ -19,6 +24,9 @@
 "{"                 return 'LLAVEIZQ';
 "}"                 return "LLAVEDER";
 "?"                 return 'KLEENE';
+"<="                return "MENOROIGUALQUE";
+">="                return 'MAYOROIGUALQUE';
+"=="                return "IGUALACION";
 "="                 return 'IGUAL';
 "$"                 return 'DOLAR';
 
@@ -27,12 +35,11 @@
 "--"                return 'REDUCCION';
 
 //operadores relacionales 
-"=="                return 'IGUALACION';
+
 "!="                return 'DIFERENCIACION';
 "<"                 return "MENORQUE";
 ">"                 return 'MAYORQUE';
-"<="                return "MENOROIGUALQUE";
-">="                return 'MAYOROIGUALQUE';
+
 
 //operadores logicos
 "!"                 return 'NOT';
@@ -103,7 +110,7 @@
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]  {}     // comentario multilinea
 
 [a-zA-Z][a-zA-Z0-9_]*   return 'ID';
-[0-9]+("."[0-9]+)\b     return 'DECIMAL';
+{int}{frac}\b     return 'DECIMAL';
 [0-9]+\b                return 'ENTERO';
 \'((\\\')|[^\n\'])*\'	{ yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }
 ["]                             {cadena="";this.begin("string");}
@@ -120,7 +127,9 @@
 
 <<EOF>>                 return 'EOF';
 
-.                       { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
+.                       { 
+ $$ = ListaTablaErrores.push(new TablaErrores("Léxico", "El caracter "+yytext+" no pertenece al lenguaje",  yylloc.first_lin, yylloc.first_column )); 
+  console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); }
 /lex
 
 %{
@@ -140,11 +149,13 @@
   const {Function} = require('./instruction/Function');
   const {Parameters} = require('./expression/Parameters');
   const {ObtenerFunction} = require('./expression/ObtenerFunction');
- 
- // const {If} = require('./instruction/If');
- // const {While} = require('./instruction/While');
- // const {Function} = require('./instruction/Function');
- // const {ObtenerFunction} = require('./expression/ObtenerFunction');
+  const {Assignation} = require('./instruction/Assignation');
+  const {TablaErrores, ListaTablaErrores} = require('./reports/TablaErrores');
+  const {If} = require('./instruction/If');
+  const {While} = require('./instruction/While');
+  /*
+  const {Method} = require('./instruction/Method');
+  const {ObtenerMethod} = require('./instruction/ObtenerMethod');*/
 
 
 %}
@@ -153,16 +164,18 @@
 
 
 // PRECEDENCIA DE OPERADORES
-%left 'MAS' 'MENOS' //3
-%left 'POR' 'DIVISION' 'MODULO' //2
-%right 'UMENOS' //0
-
-%left 'AUMENTO' 'REDUCCION'
-%left 'POTENCIA'//1X
-%right 'NOT'//5 
+%left 'AUMENTO' 'REDUCCION'//8
+%left 'POTENCIA'//1
 %left 'OR'//7
 %left 'AND'//6
-%left 'IGUALACION' 'DIFERENCIACION' 'MENORQUE' 'MAYORQUE' 'MENOROIGUALQUE' 'MAYOROIGUALQUE' //4
+%left  'DIFERENCIACION' 'MENORQUE' 'MAYORQUE' 'MENOROIGUALQUE' 'MAYOROIGUALQUE' 'IGUALACION' //4
+
+%left 'MAS' 'MENOS' //3
+%left 'POR' 'DIVISION' 'MODULO' //2
+%right 'UMENOS' PARIZQ //0
+%right 'NOT'//5 .
+
+
 
 
 
@@ -179,6 +192,14 @@ INSTRUCCIONES
 	| INSTRUCCION                   { $$ = [$1]; }
 ;
 
+TIPO
+  : RDOUBLE         { $$ = Type.DOUBLE; } 
+  | RENTERO         { $$ = Type.INT; }
+  | RCHAR           { $$ = Type.CHAR; } 
+  | RSTRING         { $$ = Type.STRING; }
+  | RBOOLEAN        { $$ = Type.BOOLEAN; }
+  | VOID             { $$ = Type.VOID; }
+; 
 
 
 BLOQUE_INSTRUCCIONES 
@@ -189,18 +210,21 @@ BLOQUE_INSTRUCCIONES
 INSTRUCCION
 	: DEFPRINT          { $$ = $1; }
   | DECLARAR          { $$ = $1; }
-  | FUNCION           { $$ = $1; } 
   | DIF                { $$ = $1; }
-  | WHILE             { $$ = $1; }
-  | LLAMAR_FUNCION  PTCOMA  { $$ = $1; } //AQUI LLEVA PT COMA
+  | FUNCION           { $$ = $1; } 
+  
+  | DWHILE             { $$ = $1; }
+  | LLAMAR_FUNCION  PTCOMA  { $$ = $1; }
 	| INCREMENTOYDECREMENTO PTCOMA { $$ = $1; }
   | VECTOR  { $$ = $1; }
   | MODIFICARVECTOR { $$ = $1; }
   | LISTA { $$ = $1; }
   | AGREGARVALORLISTA { $$ = $1; }
   | MODIFICARVALORLISTA { $$ = $1; }
+  | ASIGNACION      { $$ = $1; } //asignar valor a una variable declarada
   | error PTCOMA
-  {   console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);}
+  { $$ = ListaTablaErrores.push(new TablaErrores("Sintáctico", "No se esperaba el identificador "+yytext, this._$.first_line, this._$.first_column ));  
+    console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 
 // GRAMATICA IMPRIMIR 
@@ -217,13 +241,26 @@ DECLARAR
     : TIPO ID PTCOMA  { $$ = new Todeclare($2,$1,null,@1.first_line, @1.first_column ); }
     | TIPO ID IGUAL EXPRESION PTCOMA  { $$ = new Todeclare($2,$1,$4,@1.first_line, @1.first_column ); }
     | TIPO ID IGUAL PARIZQ TIPO PARDER EXPRESION          //CASTEO
+    
+;
+
+ASIGNACION
+  :  ID IGUAL EXPRESION PTCOMA      { $$ = new Assignation($1,$3,@1.first_line, @1.first_column ); }
+;
+DIF 
+  : IF PARIZQ EXPRESION PARDER BLOQUE_INSTRUCCIONES { $$ = new If($3, $5, null, @1.first_line, @1.first_column); }
+  | IF PARIZQ EXPRESION PARDER BLOQUE_INSTRUCCIONES DELSE {  $$ = new If($3, $5, $6, @1.first_line, @1.first_column); }
+;
+
+DELSE 
+  : ELSE DIF { $$ = $2; } 
+  | ELSE BLOQUE_INSTRUCCIONES { $$ = $2; }
 ;
 // GRAMNATICA PARA DECLARAR FUINCIONES
 FUNCION 
    : TIPO ID PARIZQ LISTA_PARAMETROS PARDER BLOQUE_INSTRUCCIONES  { $$ = new Function($1,$2,$4,$6,@1.first_line, @1.first_column ); }
    | TIPO ID PARIZQ PARDER BLOQUE_INSTRUCCIONES                 { $$ = new Function($1,$2,[],$5,@1.first_line, @1.first_column ); }
-   | VOID ID PARIZQ LISTA_PARAMETROS PARDER BLOQUE_INSTRUCCIONES //{ $$ = new Function(new Tipo(TipoPrimitivo.Void), $2, $4, $6, @2.first_line, @2.first_column); }
-   | VOID ID PARIZQ PARDER BLOQUE_INSTRUCCIONES //{    $$ = new Function(new Tipo(TipoPrimitivo.Void), $2, [], $5, @2.first_line, @2.first_column); }
+  
 ;
 
 LISTA_PARAMETROS
@@ -235,19 +272,12 @@ PARAMETRO
   : TIPO ID {$$ = new Parameters($1,$2,@1.first_line, @1.first_column);}
 ;
 //BLOQUE EDE IF, ELSE IF Y ELSE
-DIF 
-  : IF PARIZQ EXPRESION PARDER BLOQUE_INSTRUCCIONES //{ $$ = new If($3, $5, [], @1.first_line, @1.first_column); }
-  | IF PARIZQ EXPRESION PARDER BLOQUE_INSTRUCCIONES DELSE //{  $$ = new If($3, $5, $6, @1.first_line, @1.first_column); }
-;
 
-DELSE 
-  : ELSE DIF { $$ = [$2]; }
-  | ELSE BLOQUE_INSTRUCCIONES { $$ = $2; }
-;
 //GRAMATICA PARA DECLARAR WHILE
 DWHILE 
-  : WHILE PARIZQ EXPRESION PARDER BLOQUE_INSTRUCCIONES// {  $$ = new While($3, $5, @1.first_line, @1.first_column ); }
+  : WHILE PARIZQ EXPRESION PARDER BLOQUE_INSTRUCCIONES {  $$ = new While($3, $5, @1.first_line, @1.first_column ); }
 ;
+
 
 //GRAMATICA PARA LLAMAR A UNA FUNCION
 LLAMAR_FUNCION 
@@ -255,6 +285,8 @@ LLAMAR_FUNCION
   | ID PARIZQ PARDER { $$ = new ObtenerFunction($1,[],@1.first_line, @1.first_column); }
 
 ;
+
+
 LISTA_EXPRESIONES
   : LISTA_EXPRESIONES COMA EXPRESION { $1.push($3); $$ = $1; }
   | EXPRESION { $$ = [$1] }
@@ -324,14 +356,14 @@ ACCEDERID
 ;
 //INCREMENTO Y DECREMENTO
 INCREMENTOYDECREMENTO
-  : ACCEDERID AUMENTO
+  : ACCEDERID AUMENTO 
   | ACCEDERID REDUCCION
 ;
 
 
 PRIMITIVO
-  : ENTERO          { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.INT); }
-  | DECIMAL         { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.DOUBLE); }
+  : DECIMAL         { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.DOUBLE); }
+  | ENTERO          { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.INT); }
   | CADENA          { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.STRING);}
   | CARACTER        { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.CHAR); }
   | TRUE            { $$ = new Primitivo(@1.first_line, @1.first_column,$1,Type.BOOLEAN); }
@@ -340,13 +372,6 @@ PRIMITIVO
 
 
 // GRAMATICA TIPO
-TIPO
-  : RENTERO         { $$ = Type.INT; }
-  | RDOUBLE         { $$ = Type.DOUBLE; }
-  | RSTRING         { $$ = Type.STRING; }
-  | RCHAR           { $$ = Type.CHAR; }
-  | RBOOLEAN        { $$ = Type.BOOLEAN; }
-;
 
 
 //ternarios

@@ -22,23 +22,20 @@ export class Relational extends Expression {
         switch(this.tipoOperacion) {
             //igualdad
             case 0:
-                
-              
-                /*
                 if(op1.type==Type.CHAR){
                     op1.value = op1.value.charCodeAt(0);
                 }
                 if(op2.type == Type.CHAR){
                     op2.value = op2.value.charCodeAt(0);
-                }*/
+                }
                 if(op1.type == Type.INT || op1.type == Type.DOUBLE || op1.type == Type.CHAR){
                     if(op2.type == Type.INT || op2.type == Type.DOUBLE || op1.type == Type.CHAR){
-                        return { value: op1.value != op2.value, type: Type.BOOLEAN };
+                        return { value: op1.value == op2.value, type: Type.BOOLEAN };
                     }else{
                         return { value: null, type: Type.NULL };
                     }
                 }
-                /*
+                
                 else if(op1.type == Type.STRING && op2.type == Type.STRING){
                     op1.value = op1.value.toString();
                     op2.value = op2.value.toString();
@@ -48,51 +45,105 @@ export class Relational extends Expression {
                     op1.value = op1.value ? 1 : 0;
                     op2.value = op2.value ? 1 : 0;
                     return { value: op1.value==op2.value, type: Type.BOOLEAN };
-                }*/
+                }
             //diferente
             case 1:
+                if(op1.type==Type.CHAR){
+                    op1.value = op1.value.charCodeAt(0);
+                }
+                if(op2.type == Type.CHAR){
+                    op2.value = op2.value.charCodeAt(0);
+                }
                 if(op1.type == Type.INT || op1.type == Type.DOUBLE || op1.type == Type.CHAR){
                     if(op2.type == Type.INT || op2.type == Type.DOUBLE || op1.type == Type.CHAR){
                         return { value: op1.value!=op2.value, type: Type.BOOLEAN };
                     }
+                }else if(op1.type == Type.STRING && op2.type == Type.STRING){
+                    op1.value = op1.value.toString();
+                    op2.value = op2.value.toString();
+                    return { value: op1.value!=op2.value, type: Type.BOOLEAN };
+                }else if(op1.type == Type.BOOLEAN && op2.type == Type.BOOLEAN){
+                    op1.value = op1.value ? 1 : 0;
+                    op2.value = op2.value ? 1 : 0;
+                    return { value: op1.value!=op2.value, type: Type.BOOLEAN };
                 }
 
             //menor
             case 2:
+                if(op1.type==Type.CHAR){
+                    op1.value = op1.value.charCodeAt(0);
+                }
+                if(op2.type == Type.CHAR){
+                    op2.value = op2.value.charCodeAt(0);
+                }
                 if(op1.type == Type.INT || op1.type == Type.DOUBLE || op1.type == Type.CHAR){
                     if(op2.type == Type.INT || op2.type == Type.DOUBLE || op1.type == Type.CHAR){
                         return { value: op1.value<op2.value, type: Type.BOOLEAN };
                     }
-                } 
+                } else if(op1.type == Type.BOOLEAN && op2.type == Type.BOOLEAN){
+                    op1.value = op1.value ? 1 : 0;
+                    op2.value = op2.value ? 1 : 0;
+                    return { value: op1.value<op2.value, type: Type.BOOLEAN };
+                }
             
 
             //menor o igual
             case 3:
-               /*
+                if(op1.type==Type.CHAR){
+                    op1.value = op1.value.charCodeAt(0);
+                }
+                if(op2.type == Type.CHAR){
+                    op2.value = op2.value.charCodeAt(0);
+                }
             if(op1.type == Type.INT || op1.type == Type.DOUBLE || op1.type == Type.CHAR){
                 if(op2.type == Type.INT || op2.type == Type.DOUBLE || op1.type == Type.CHAR){
                     return { value: op1.value<=op2.value, type: Type.BOOLEAN };
                 } 
-            }*/
+            }else if(op1.type == Type.BOOLEAN && op2.type == Type.BOOLEAN){
+                op1.value = op1.value ? 1 : 0;
+                op2.value = op2.value ? 1 : 0;
+                return { value: op1.value<=op2.value, type: Type.BOOLEAN };
+            }
 
 
             //mayor
             case 4:
+                if(op1.type==Type.CHAR){
+                    op1.value = op1.value.charCodeAt(0);
+                }
+                if(op2.type == Type.CHAR){
+                    op2.value = op2.value.charCodeAt(0);
+                }
                 if(op1.type == Type.INT || op1.type == Type.DOUBLE || op1.type == Type.CHAR){
                     if(op2.type == Type.INT || op2.type == Type.DOUBLE || op1.type == Type.CHAR){
                         return { value: op1.value>op2.value, type: Type.BOOLEAN };
                     }
-                }
+                }else if(op1.type == Type.BOOLEAN && op2.type == Type.BOOLEAN){
+                    op1.value = op1.value ? 1 : 0;
+                    op2.value = op2.value ? 1 : 0;
+                    return { value: op1.value>op2.value, type: Type.BOOLEAN };
+                } 
 
             //mayor o igual que
             case 5:
-                /*
+                if(op1.type==Type.CHAR){
+                    op1.value = op1.value.charCodeAt(0);
+                }
+                if(op2.type == Type.CHAR){
+                    op2.value = op2.value.charCodeAt(0);
+                }
                 if(op1.type == Type.INT || op1.type == Type.DOUBLE || op1.type == Type.CHAR){
                     if(op2.type == Type.INT || op2.type == Type.DOUBLE || op1.type == Type.CHAR){
                         return { value: op1.value>=op2.value, type: Type.BOOLEAN };
                     }
-                }
-            */
+                } else if(op1.type == Type.BOOLEAN && op2.type == Type.BOOLEAN){
+                    op1.value = op1.value ? 1 : 0;
+                    op2.value = op2.value ? 1 : 0;
+                    return { value: op1.value>=op2.value, type: Type.BOOLEAN };
+                } 
+            
+          
+            
         }
         return { value: null, type: Type.NULL };
       }  

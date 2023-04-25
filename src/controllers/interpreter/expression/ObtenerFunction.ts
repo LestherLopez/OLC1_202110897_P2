@@ -10,6 +10,7 @@ export class ObtenerFunction extends Expression {
     public execute(env: Environment):any {
         // ejecutar la funcion
         const funcion = env.getFuncion(this.id);
+    
         if (funcion != null) {
             // crear un nuevo entorno
             const envFun = new Environment(env.getGlobal(), "null");
@@ -30,7 +31,7 @@ export class ObtenerFunction extends Expression {
                 }
               }
               // ejecutar el cuerpo de la funcion
-              funcion.statement.execute(envFun);
+              funcion.statement.execute(envFun, this.id);
             } else {
               console.log("Error, La funcion " + this.id + " no tiene la cantidad de parametros correcta, linea " + this.line + " y columna " + this.column);
             }
