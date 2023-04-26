@@ -10,5 +10,7 @@ var TipoAritmetica;
     TipoAritmetica[TipoAritmetica["MENOSUNARIO"] = 4] = "MENOSUNARIO";
     TipoAritmetica[TipoAritmetica["POTENCIA"] = 5] = "POTENCIA";
     TipoAritmetica[TipoAritmetica["MODULO"] = 6] = "MODULO";
+    TipoAritmetica[TipoAritmetica["INCREMENTO"] = 7] = "INCREMENTO";
+    TipoAritmetica[TipoAritmetica["DECREMENTO"] = 8] = "DECREMENTO";
 })(TipoAritmetica = exports.TipoAritmetica || (exports.TipoAritmetica = {}));
 //# sourceMappingURL=TipoAritmetica.js.map

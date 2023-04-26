@@ -57,6 +57,8 @@ frac                        (?:\.[0-9]+)
 "while"              return 'WHILE';    
 "else"               return 'ELSE';     
 "void"              return 'VOID';     
+"toLower"           return 'TOLOWER';
+"toUpper"           return 'TOUPPER';
 "return"             return 'RETURN';  
 "new"               return 'NEW';
 "list"              return 'LIST';
@@ -68,8 +70,7 @@ frac                        (?:\.[0-9]+)
 "do"                return 'DO';
 "break"             return 'BREAK';
 "continue"          return 'CONTINUE';
-"toLower"           return 'TOLOWER';
-"toUpper"           return 'TOUPPER';
+
 "Length"            return 'LENGTH';
 "truncate"          return 'TRUNCATE';
 "round"             return 'ROUND';
@@ -153,11 +154,15 @@ frac                        (?:\.[0-9]+)
   const {TablaErrores, ListaTablaErrores} = require('./reports/TablaErrores');
   const {If} = require('./instruction/If');
   const {While} = require('./instruction/While');
-  /*
-  const {Method} = require('./instruction/Method');
-  const {ObtenerMethod} = require('./instruction/ObtenerMethod');*/
-
-
+  const {IncreaseDecrease} = require('./expression/IncreaseDecrease');
+  const {Main} = require('./instruction/Main');
+  const {toLower} = require('./instruction/toLower');
+  const {toUpper} = require('./instruction/toUpper');
+  const {Length} = require('./expression/Length');
+  const {Truncate} = require('./expression/Truncate');
+  const {Round} = require('./expression/Round');
+  const {Typeof} = require('./expression/Typeof');
+  const {toString} = require('./expression/toString');
 %}
 
 
@@ -172,7 +177,7 @@ frac                        (?:\.[0-9]+)
 
 %left 'MAS' 'MENOS' //3
 %left 'POR' 'DIVISION' 'MODULO' //2
-%right 'UMENOS' PARIZQ //0
+%right 'UMENOS'  //0
 %right 'NOT'//5 .
 
 
@@ -212,13 +217,15 @@ INSTRUCCION
   | DECLARAR          { $$ = $1; }
   | DIF                { $$ = $1; }
   | FUNCION           { $$ = $1; } 
-  
   | DWHILE             { $$ = $1; }
   | LLAMAR_FUNCION  PTCOMA  { $$ = $1; }
 	| INCREMENTOYDECREMENTO PTCOMA { $$ = $1; }
+  | DTOLOWER  PTCOMA               { $$ = $1; }
+  | DTOUPPER  PTCOMA               { $$ = $1; }
   | VECTOR  { $$ = $1; }
   | MODIFICARVECTOR { $$ = $1; }
   | LISTA { $$ = $1; }
+  | MAIN LLAMAR_FUNCION PTCOMA {$$= new Main($2, @1.first_line, @1.first_column);}
   | AGREGARVALORLISTA { $$ = $1; }
   | MODIFICARVALORLISTA { $$ = $1; }
   | ASIGNACION      { $$ = $1; } //asignar valor a una variable declarada
@@ -335,9 +342,40 @@ EXPRESION
   | EXPRESION MAYORQUE EXPRESION        { $$ = new Relational($1,$3,TipoRelacional.MAYOR,@1.first_line, @1.first_column); } 
   | EXPRESION MAYOROIGUALQUE EXPRESION  { $$ = new Relational($1,$3,TipoRelacional.MAYORIGUAL,@1.first_line, @1.first_column); } 
 	| INCREMENTOYDECREMENTO             { $$ = $1; }
+  | DTOLOWER                           { $$ = $1; }
+  | DTOUPPER                           { $$ = $1; }
+  | DLENGTH                              { $$ = $1; }
+  | DTRUNCATE                            { $$ = $1; }
+  | DROUND                             { $$ = $1; } 
+  | DTYPEOF                              { $$ = $1; } 
+  | DTOSTRING                            { $$ = $1; } 
   | ACCEDERVECTOR                      { $$ = $1; }
   | ACCEDERLISTA                      { $$ = $1; }
   | OPERADORTERNARIO                   { $$ = $1; }
+       
+;   
+DTOLOWER
+  : TOLOWER PARIZQ EXPRESION PARDER   { $$ = new toLower($3,@1.first_line, @1.first_column); }  
+;
+DTRUNCATE
+  : TRUNCATE PARIZQ EXPRESION PARDER  { $$ = new Truncate($3,@1.first_line, @1.first_column); }
+;
+DLENGTH
+  : LENGTH PARIZQ EXPRESION PARDER  { $$ = new Length($3,@1.first_line, @1.first_column); }  
+;
+DTOUPPER
+  : TOUPPER PARIZQ EXPRESION PARDER   { $$ = new toUpper($3,@1.first_line, @1.first_column); }  
+;
+
+DROUND 
+  : ROUND PARIZQ EXPRESION PARDER     { $$ = new Round($3,@1.first_line, @1.first_column); }  
+;
+DTYPEOF
+  : TYPEOF PARIZQ EXPRESION PARDER     { $$ = new Typeof($3,@1.first_line, @1.first_column); }  
+;
+
+DTOSTRING
+  : TOSTRING PARIZQ EXPRESION PARDER     { $$ = new toString($3,@1.first_line, @1.first_column); }  
 ;
 
 ACCEDERLISTA
@@ -356,8 +394,8 @@ ACCEDERID
 ;
 //INCREMENTO Y DECREMENTO
 INCREMENTOYDECREMENTO
-  : ACCEDERID AUMENTO 
-  | ACCEDERID REDUCCION
+  : ID AUMENTO  { $$ = new IncreaseDecrease($1,TipoAritmetica.INCREMENTO,@1.first_line, @1.first_column); }  
+  | ID REDUCCION  { $$ = new IncreaseDecrease($1,TipoAritmetica.DECREMENTO,@1.first_line, @1.first_column); }  
 ;
 
 

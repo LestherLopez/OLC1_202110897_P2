@@ -46,7 +46,7 @@ function Home(){
                     <Editor input={setEditor}/>
                 </Col>
                 <Col>
-                <textarea id="editor" rows="20" cols="50" value={consola}></textarea>
+                <textarea id="editor" rows="20" cols="80" value={consola}></textarea>
                 </Col>
             </Row>
             {/*seccion de botones */}

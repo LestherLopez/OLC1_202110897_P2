@@ -11,6 +11,7 @@ class Print extends Instruction_1.Instruction {
     execute(env) {
         const value = this.expression.execute(env); // value and type
         PrintList_1.printlist.push(value.value);
+        // printlist.push("\n");
         console.log("desde consola:", value.value);
     }
 }

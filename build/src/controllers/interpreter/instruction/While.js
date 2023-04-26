@@ -17,7 +17,6 @@ class While extends Instruction_1.Instruction {
             this.sentencias.execute(environment_while, "while");
             condicional = this.exp.execute(environment_while);
         }
-        // condicional.value = this.exp.execute(env).value;
     }
 }
 exports.While = While;

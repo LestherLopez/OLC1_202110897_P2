@@ -24,7 +24,7 @@ class Statement extends Instruction_1.Instruction {
                 }
             }
             catch (e) {
-                console.log("Errro al ejecutar instrucciones");
+                //console.log("Errro al ejecutar instrucciones")
             }
         }
     }

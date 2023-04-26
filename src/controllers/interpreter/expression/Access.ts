@@ -15,7 +15,4 @@ export class Access extends Expression{
             return {value: null, type: Type.NULL}
         }
     }
-
-
-
 }

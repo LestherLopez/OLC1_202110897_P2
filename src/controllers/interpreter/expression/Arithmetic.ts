@@ -297,7 +297,9 @@ export class Arithmetic extends Expression {
         return { value: -op2.value, type: Type.DOUBLE };
       }
 
-    }
+    } 
+  
+
     return { value: null, type: Type.NULL };
   }
 }

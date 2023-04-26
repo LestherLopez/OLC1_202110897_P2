@@ -15,6 +15,7 @@ export class Print extends Instruction {
   public execute(env:Environment): void {
     const value = this.expression.execute(env); // value and type
     printlist.push(value.value);
+   // printlist.push("\n");
     console.log("desde consola:" ,value.value);
   }
 

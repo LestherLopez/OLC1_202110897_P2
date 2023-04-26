@@ -31,7 +31,8 @@ class InterpreteController {
         for (const inst of ast){
             inst.execute(globalEnv);
         }
-        res.json({ consola:printlist, errores: "ninguno" });
+        
+        res.json({ consola:printlist.join("\n"), errores: "ninguno" });
 
       } catch (error) {
         console.log(error);

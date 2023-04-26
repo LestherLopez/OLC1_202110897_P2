@@ -25,8 +25,7 @@ export class While extends Instruction{
             condicional = this.exp.execute(environment_while);
         
         }    
-    
-        // condicional.value = this.exp.execute(env).value;
+
         
         }  
 }
