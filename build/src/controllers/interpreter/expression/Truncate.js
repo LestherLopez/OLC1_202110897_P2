@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Truncate = void 0;
-const Instruction_1 = require("../abstract/Instruction");
+const Expression_1 = require("../abstract/Expression");
 const Return_1 = require("../abstract/Return");
-class Truncate extends Instruction_1.Instruction {
+class Truncate extends Expression_1.Expression {
     constructor(expression, line, column) {
         super(line, column);
         this.expression = expression;
@@ -14,6 +14,9 @@ class Truncate extends Instruction_1.Instruction {
             return { value: Math.trunc(valor.value), type: Return_1.Type.INT };
         }
         return { value: null, type: Return_1.Type.NULL };
+    }
+    AST() {
+        return { rama: "", nodo: "" };
     }
 }
 exports.Truncate = Truncate;

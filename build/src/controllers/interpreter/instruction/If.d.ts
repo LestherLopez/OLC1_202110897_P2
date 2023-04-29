@@ -7,4 +7,8 @@ export declare class If extends Instruction {
     sentencias_else: Instruction;
     constructor(exp_condicion: Expression, sentencias: Instruction, sentencias_else: Instruction, line: number, column: number);
     execute(env: Environment): null | undefined;
+    AST(): {
+        rama: string;
+        nodo: string;
+    };
 }

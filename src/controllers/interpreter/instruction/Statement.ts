@@ -8,25 +8,34 @@ export class Statement extends Instruction {
     }
 
     public execute(env: Environment, id: string) {
-        const newEnv = new Environment(env, "Funcion");
+        const newEnv = new Environment(env, `Funcion ${id.toString()}`);
 
         for(const instrucciones of this.body){
             try{
                 
                 const ret = instrucciones.execute(newEnv, id);
-                // si la instruccion es un return, retornar el valor
                 if (ret != null && ret != undefined) {
-                    //const funcion = env.getFuncion(id);
-                   // if(funcion?.tipo!=Type.VOID){
-                        return ret;
-                   // }else{
-                        return;
-                   // }
+                   // console.log(ret.value)
+                    return ret.value;
                     
                 }
+                // si la instruccion es un return, retornar el valor
+                /*
+                if (ret != null && ret != undefined) {
+                    const funcion = env.getFuncion(id);
+                    if(funcion?.tipo!=Type.VOID){
+                        return ret;
+                    }else{
+                        return ret;
+                    }*/
+                  
+                
             }catch(e){
                 //console.log("Errro al ejecutar instrucciones")
             }
         }
+    }
+    public AST(): {rama: string, nodo:string} {
+        return {rama: "", nodo:""}
     }
 }

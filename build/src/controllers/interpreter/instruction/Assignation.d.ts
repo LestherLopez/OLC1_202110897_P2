@@ -6,4 +6,8 @@ export declare class Assignation extends Instruction {
     valor: Expression;
     constructor(id_var: string, valor: Expression, line: number, column: number);
     execute(env: Environment): void;
+    AST(): {
+        rama: string;
+        nodo: string;
+    };
 }

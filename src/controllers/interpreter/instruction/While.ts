@@ -28,7 +28,11 @@ export class While extends Instruction{
 
         
         }  
+        public AST(): {rama: string, nodo:string} {
+            return {rama: "", nodo:""}
+        } 
 }
+
 
     //hace falta meter valores de AST en el execute ya cuando se tenga el AST
 

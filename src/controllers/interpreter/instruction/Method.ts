@@ -13,5 +13,8 @@ export class Method extends Instruction{
         // guardar la funcion en entorno
         env.guardarMetodo(this.id,this);
     }
+    public AST(): {rama: string, nodo:string} {
+        return {rama: "", nodo:""}
+    }
     
 }

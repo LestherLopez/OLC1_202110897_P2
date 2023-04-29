@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Round = void 0;
-const Instruction_1 = require("../abstract/Instruction");
+const Expression_1 = require("../abstract/Expression");
 const Return_1 = require("../abstract/Return");
-class Round extends Instruction_1.Instruction {
+class Round extends Expression_1.Expression {
     constructor(expression, line, column) {
         super(line, column);
         this.expression = expression;
@@ -23,6 +23,9 @@ class Round extends Instruction_1.Instruction {
             }
         }
         return { value: null, type: Return_1.Type.NULL };
+    }
+    AST() {
+        return { rama: "", nodo: "" };
     }
 }
 exports.Round = Round;

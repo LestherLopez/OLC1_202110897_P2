@@ -36,6 +36,9 @@ class Logic extends Expression_1.Expression {
         }
         return { value: null, type: Return_1.Type.NULL };
     }
+    AST() {
+        return { rama: "", nodo: "" };
+    }
 }
 exports.Logic = Logic;
 //# sourceMappingURL=Logic.js.map

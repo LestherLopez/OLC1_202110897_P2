@@ -8,4 +8,8 @@ export declare class Todeclare extends Instruction {
     private valor;
     constructor(id: string, tipo: Type, valor: Expression | null, line: number, column: number);
     execute(env: Environment): any;
+    AST(): {
+        rama: string;
+        nodo: string;
+    };
 }

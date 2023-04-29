@@ -23,6 +23,7 @@ export class Environment {
   
       // verificar si la variable ya existe
       if (!env.variables.has(id.toLowerCase())) {
+     
         // guardar la variable
         // guardar la variable en una tabla de simbolos para el reporte
         env.variables.set(id.toLowerCase(), new Simbolo(valor, id, tipo));
@@ -32,6 +33,9 @@ export class Environment {
       }
   
     }
+public getName(): string{
+  return this.nameenv;
+}
 public getVar(id: string): Simbolo | null {
   //verificar si el amiente no es nulo
   let env: Environment | null = this;

@@ -2,7 +2,7 @@ import { Instruction } from "../abstract/Instruction";
 import { Expression } from "../abstract/Expression";
 import { Environment } from "../abstract/Environment";
 import { Return, Type } from "../abstract/Return";
-export class Truncate extends Instruction {
+export class Truncate extends Expression {
   constructor(
     private expression: Expression,
     line: number,
@@ -21,5 +21,7 @@ export class Truncate extends Instruction {
    
    return { value: null, type: Type.NULL };
   }
-
+  public AST(): {rama: string, nodo:string} {
+    return {rama: "", nodo:""}
+}
 }

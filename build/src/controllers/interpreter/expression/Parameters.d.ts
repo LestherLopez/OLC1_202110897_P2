@@ -6,4 +6,8 @@ export declare class Parameters extends Expression {
     private id;
     constructor(tipo: Type, id: string, line: number, column: number);
     execute(env: Environment): Return;
+    AST(): {
+        rama: string;
+        nodo: string;
+    };
 }

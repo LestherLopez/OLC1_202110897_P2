@@ -302,4 +302,7 @@ export class Arithmetic extends Expression {
 
     return { value: null, type: Type.NULL };
   }
+  public AST(): {rama: string, nodo:string} {
+    return {rama: "", nodo:""}
+}
 }

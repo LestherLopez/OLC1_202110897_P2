@@ -18,5 +18,20 @@ export class Print extends Instruction {
    // printlist.push("\n");
     console.log("desde consola:" ,value.value);
   }
-
+  public AST(): {rama: string, nodo:string} {
+    //numero de id del nodo print
+    const id = Math.floor(Math.random() * 100) + 1;
+    //agregar el id a nodoprint
+    const nombreNodo = 'nodoPrint'+id.toString();
+    //agregar label a nodoPrint
+    let ramaPrint = nombreNodo+`[label="Print"];\n`
+    //obtener nodo y rama de expresion
+    const codeRama : {rama: string, nodo:string} = this.expression.AST();
+    //agregar a la rama de print las ramas de expresion
+    ramaPrint += codeRama.rama;
+    //agregar a la rama de print la conexion de print a expresion
+    ramaPrint += nombreNodo+"->"+codeRama.nodo+`;\n`
+    
+    return {rama: ramaPrint, nodo:nombreNodo}
+}
 }

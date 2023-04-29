@@ -47,9 +47,11 @@ class IncreaseDecrease extends Expression_1.Expression {
             else {
                 return { value: null, type: Return_1.Type.NULL };
             }
-            // entero
         }
         return { value: null, type: Return_1.Type.NULL };
+    }
+    AST() {
+        return { rama: "", nodo: "" };
     }
 }
 exports.IncreaseDecrease = IncreaseDecrease;

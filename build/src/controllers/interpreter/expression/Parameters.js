@@ -12,6 +12,9 @@ class Parameters extends Expression_1.Expression {
         // verificar el parametro
         return { value: this.id, type: this.tipo };
     }
+    AST() {
+        return { rama: "", nodo: "" };
+    }
 }
 exports.Parameters = Parameters;
 //# sourceMappingURL=Parameters.js.map

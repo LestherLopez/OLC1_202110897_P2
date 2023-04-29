@@ -13,6 +13,9 @@ class Method extends Instruction_1.Instruction {
         // guardar la funcion en entorno
         env.guardarMetodo(this.id, this);
     }
+    AST() {
+        return { rama: "", nodo: "" };
+    }
 }
 exports.Method = Method;
 //# sourceMappingURL=Method.js.map

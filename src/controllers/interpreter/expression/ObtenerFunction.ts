@@ -40,4 +40,7 @@ export class ObtenerFunction extends Expression {
             console.log("Error, La funcion " + this.id + " no existe, linea " + this.line + " y columna " + this.column);
           }
     }
+    public AST(): {rama: string, nodo:string} {
+      return {rama: "", nodo:""}
+  }
 }

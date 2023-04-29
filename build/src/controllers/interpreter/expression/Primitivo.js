@@ -30,6 +30,17 @@ class Primitivo extends Expression_1.Expression {
                 return { value: null, type: Return_1.Type.NULL };
         }
     }
+    AST() {
+        //crear nodoPrimitivo y ramaPrimitivo
+        const id = Math.floor(Math.random() * 100) + 1;
+        const nombreNodo = 'nodoPrimitivo' + id.toString();
+        let ramaPrimitivo = nombreNodo + `[label="Primitivo"];\n`;
+        //agregar nodo del valor
+        ramaPrimitivo += "nodoPrimitivo" + nombreNodo + "[label=\"" + this.value.toString() + "\"];" + `\n`;
+        //conexion de nodo Primitivo - > nodo de valor
+        ramaPrimitivo += nombreNodo + "->" + "nodoPrimitivo" + nombreNodo + `;\n`;
+        return { rama: ramaPrimitivo, nodo: nombreNodo };
+    }
 }
 exports.Primitivo = Primitivo;
 //# sourceMappingURL=Primitivo.js.map

@@ -10,6 +10,9 @@ class Main extends Instruction_1.Instruction {
     execute(env) {
         this.funcion.execute(env.getGlobal());
     }
+    AST() {
+        return { rama: "", nodo: "" };
+    }
 }
 exports.Main = Main;
 //# sourceMappingURL=Main.js.map

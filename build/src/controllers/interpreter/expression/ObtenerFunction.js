@@ -43,6 +43,9 @@ class ObtenerFunction extends Expression_1.Expression {
             console.log("Error, La funcion " + this.id + " no existe, linea " + this.line + " y columna " + this.column);
         }
     }
+    AST() {
+        return { rama: "", nodo: "" };
+    }
 }
 exports.ObtenerFunction = ObtenerFunction;
 //# sourceMappingURL=ObtenerFunction.js.map

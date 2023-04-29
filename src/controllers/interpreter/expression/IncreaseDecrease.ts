@@ -1,7 +1,6 @@
 import { Expression } from "../abstract/Expression";
 import { Return, Type } from "../abstract/Return";
 import { Environment } from "../abstract/Environment";
-import { TablaSuma, TablaResta, TablaMultiplicacion, TablaDivision, TablaModulo, TablaPotencia } from "../utils/MatrizAritmetica";
 import { TipoAritmetica } from "../utils/TipoAritmetica";
 
 export class IncreaseDecrease extends Expression {
@@ -19,8 +18,6 @@ export class IncreaseDecrease extends Expression {
       let op1 = env.getVar(this.izquierdo);
       // entero
       if(op1){
-
-
       if(op1.type == Type.INT){
         op1.valor = op1.valor+1;
         return { value: op1.valor, type: Type.INT };
@@ -52,12 +49,11 @@ export class IncreaseDecrease extends Expression {
         }
     }else{
         return {value: null, type: Type.NULL}
-    }
-      // entero
-     
-      
-    
+    } 
     }
     return { value: null, type: Type.NULL };
-  } 
+  }
+  public AST(): {rama: string, nodo:string} {
+    return {rama: "", nodo:""}
+} 
 }

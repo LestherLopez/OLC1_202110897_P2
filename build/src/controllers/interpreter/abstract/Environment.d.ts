@@ -10,6 +10,7 @@ export declare class Environment {
     private nameenv;
     constructor(anterior: Environment | null, nameenv: string);
     guardar(id: string, valor: any, tipo: Type, linea: number, columna: number): void;
+    getName(): string;
     getVar(id: string): Simbolo | null;
     guardarFuncion(id: string, funcion: Function): void;
     getFuncion(id: string): Function | null;

@@ -6,4 +6,8 @@ export declare class While extends Instruction {
     sentencias: Instruction;
     constructor(exp: Expression, sentencias: Instruction, linea: number, columna: number);
     execute(env: Environment): void;
+    AST(): {
+        rama: string;
+        nodo: string;
+    };
 }

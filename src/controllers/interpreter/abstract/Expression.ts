@@ -9,5 +9,5 @@ export abstract class Expression {
     }
 
     public abstract execute(env:Environment): Return;
-
+    public abstract AST(): {rama: string, nodo:string};
 }

@@ -34,4 +34,15 @@ export class Primitivo extends Expression {
   }
 
 }
+public AST(): {rama: string, nodo:string} {
+  //crear nodoPrimitivo y ramaPrimitivo
+  const id = Math.floor(Math.random() * 100) + 1;
+  const nombreNodo = 'nodoPrimitivo'+id.toString();
+  let ramaPrimitivo = nombreNodo+`[label="Primitivo"];\n`
+  //agregar nodo del valor
+  ramaPrimitivo += "nodoPrimitivo"+nombreNodo+"[label=\""+this.value.toString()+"\"];"+`\n`;
+  //conexion de nodo Primitivo - > nodo de valor
+  ramaPrimitivo += nombreNodo+"->"+ "nodoPrimitivo"+nombreNodo+`;\n`
+  return {rama: ramaPrimitivo, nodo:nombreNodo}
+}
 }

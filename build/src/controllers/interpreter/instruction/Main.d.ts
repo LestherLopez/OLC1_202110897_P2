@@ -5,4 +5,8 @@ export declare class Main extends Instruction {
     funcion: ObtenerFunction;
     constructor(funcion: ObtenerFunction, line: number, column: number);
     execute(env: Environment): void;
+    AST(): {
+        rama: string;
+        nodo: string;
+    };
 }

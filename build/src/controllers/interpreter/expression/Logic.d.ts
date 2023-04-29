@@ -8,4 +8,8 @@ export declare class Logic extends Expression {
     private tipoOperacion;
     constructor(izquierdo: Expression, derecho: Expression, tipoOperacion: TipoLogica, line: number, column: number);
     execute(env: Environment): Return;
+    AST(): {
+        rama: string;
+        nodo: string;
+    };
 }

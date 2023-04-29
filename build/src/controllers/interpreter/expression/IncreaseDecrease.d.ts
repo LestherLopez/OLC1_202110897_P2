@@ -7,4 +7,8 @@ export declare class IncreaseDecrease extends Expression {
     private tipoOperacion;
     constructor(izquierdo: string, tipoOperacion: TipoAritmetica, line: number, column: number);
     execute(env: Environment): Return;
+    AST(): {
+        rama: string;
+        nodo: string;
+    };
 }

@@ -8,4 +8,8 @@ export declare class Relational extends Expression {
     private tipoOperacion;
     constructor(izquierdo: Expression, derecho: Expression, tipoOperacion: TipoRelacional, line: number, column: number);
     execute(env: Environment): Return;
+    AST(): {
+        rama: string;
+        nodo: string;
+    };
 }

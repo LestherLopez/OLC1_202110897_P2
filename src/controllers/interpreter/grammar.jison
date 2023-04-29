@@ -59,7 +59,7 @@ frac                        (?:\.[0-9]+)
 "void"              return 'VOID';     
 "toLower"           return 'TOLOWER';
 "toUpper"           return 'TOUPPER';
-"return"             return 'RETURN';  
+"return"             return 'RRETURN';  
 "new"               return 'NEW';
 "list"              return 'LIST';
 "add"               return 'ADD';
@@ -156,13 +156,15 @@ frac                        (?:\.[0-9]+)
   const {While} = require('./instruction/While');
   const {IncreaseDecrease} = require('./expression/IncreaseDecrease');
   const {Main} = require('./instruction/Main');
-  const {toLower} = require('./instruction/toLower');
-  const {toUpper} = require('./instruction/toUpper');
+  const {toLower} = require('./expression/toLower');
+  const {toUpper} = require('./expression/toUpper');
   const {Length} = require('./expression/Length');
   const {Truncate} = require('./expression/Truncate');
   const {Round} = require('./expression/Round');
   const {Typeof} = require('./expression/Typeof');
   const {toString} = require('./expression/toString');
+    const {For} = require('./instruction/For');
+    const {DoWhile} = require('./instruction/DoWhile');
 %}
 
 
@@ -217,13 +219,17 @@ INSTRUCCION
   | DECLARAR          { $$ = $1; }
   | DIF                { $$ = $1; }
   | FUNCION           { $$ = $1; } 
-  | DWHILE             { $$ = $1; }
+  | DWHILE             { $$ = $1; }         
   | LLAMAR_FUNCION  PTCOMA  { $$ = $1; }
+  | DFOR                    { $$ = $1; }
+  | DOWHILE                { $$ = $1; }
+  | SWITCHCASE            { $$ = $1; }
 	| INCREMENTOYDECREMENTO PTCOMA { $$ = $1; }
   | DTOLOWER  PTCOMA               { $$ = $1; }
   | DTOUPPER  PTCOMA               { $$ = $1; }
   | VECTOR  { $$ = $1; }
   | MODIFICARVECTOR { $$ = $1; }
+  | DRETURN  { $$ = $1; }
   | LISTA { $$ = $1; }
   | MAIN LLAMAR_FUNCION PTCOMA {$$= new Main($2, @1.first_line, @1.first_column);}
   | AGREGARVALORLISTA { $$ = $1; }
@@ -247,10 +253,12 @@ DEFPRINT
 DECLARAR
     : TIPO ID PTCOMA  { $$ = new Todeclare($2,$1,null,@1.first_line, @1.first_column ); }
     | TIPO ID IGUAL EXPRESION PTCOMA  { $$ = new Todeclare($2,$1,$4,@1.first_line, @1.first_column ); }
-    | TIPO ID IGUAL PARIZQ TIPO PARDER EXPRESION          //CASTEO
     
 ;
-
+DRETURN
+  : RRETURN  PTCOMA { $$ = null; }
+  | RRETURN EXPRESION PTCOMA { $$ = $2; }
+;
 ASIGNACION
   :  ID IGUAL EXPRESION PTCOMA      { $$ = new Assignation($1,$3,@1.first_line, @1.first_column ); }
 ;
@@ -285,15 +293,30 @@ DWHILE
   : WHILE PARIZQ EXPRESION PARDER BLOQUE_INSTRUCCIONES {  $$ = new While($3, $5, @1.first_line, @1.first_column ); }
 ;
 
-
-//GRAMATICA PARA LLAMAR A UNA FUNCION
-LLAMAR_FUNCION 
-  : ID PARIZQ LISTA_EXPRESIONES PARDER { $$ = new ObtenerFunction($1,$3,@1.first_line, @1.first_column); }
-  | ID PARIZQ PARDER { $$ = new ObtenerFunction($1,[],@1.first_line, @1.first_column); }
-
+DFOR
+  : FOR PARIZQ CONDICIONINICIALFOR EXPRESION PTCOMA EXPRESION PARDER BLOQUE_INSTRUCCIONES {  $$ = new For($3, $4,$6,$8, @1.first_line, @1.first_column ); }
 ;
 
+CONDICIONINICIALFOR
+  : ASIGNACION { $$ = $1; }
+  | DECLARAR { $$ = $1; }
+;
+ DOWHILE
+  : DO BLOQUE_INSTRUCCIONES WHILE PARIZQ EXPRESION PARDER PTCOMA {  $$ = new DoWhile($5, $2, @1.first_line, @1.first_column ); }
+;
 
+/*
+SWITCHCASE
+  : SWITCH PARIZQ EXPRESION PARDER LLAVEIZQ LISTA_CASOS LLAVEDER
+;
+LISTA_CASOS
+  : CASE EXPRESION DOSPUNTOS INSTRUCCIONES_CASE
+;
+INSTRUCCIONES_CASE 
+  :  INSTRUCCIONES   { $$ = new Statement($2,@1.first_line, @1.first_column); }
+  |               { $$ = new Statement([],@1.first_line, @1.first_column); }
+;
+*/
 LISTA_EXPRESIONES
   : LISTA_EXPRESIONES COMA EXPRESION { $1.push($3); $$ = $1; }
   | EXPRESION { $$ = [$1] }
@@ -354,6 +377,13 @@ EXPRESION
   | OPERADORTERNARIO                   { $$ = $1; }
        
 ;   
+
+//GRAMATICA PARA LLAMAR A UNA FUNCION
+LLAMAR_FUNCION 
+  : ID PARIZQ LISTA_EXPRESIONES PARDER { $$ = new ObtenerFunction($1,$3,@1.first_line, @1.first_column); }
+  | ID PARIZQ PARDER { $$ = new ObtenerFunction($1,[],@1.first_line, @1.first_column); }
+
+;
 DTOLOWER
   : TOLOWER PARIZQ EXPRESION PARDER   { $$ = new toLower($3,@1.first_line, @1.first_column); }  
 ;

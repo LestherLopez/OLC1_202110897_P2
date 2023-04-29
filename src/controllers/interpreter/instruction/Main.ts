@@ -16,7 +16,9 @@ export class Main extends Instruction{
         this.funcion.execute(env.getGlobal());
     }
 
-
+    public AST(): {rama: string, nodo:string} {
+        return {rama: "", nodo:""}
+    }
 
 }
 

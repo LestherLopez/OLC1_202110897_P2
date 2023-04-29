@@ -27,6 +27,9 @@ export class If extends Instruction{
             this.sentencias_else.execute(else_environment, "else");
         }
     }
+    public AST(): {rama: string, nodo:string} {
+        return {rama: "", nodo:""}
+    }
 }
 /*
 export class If extends Instruccion {

@@ -28,6 +28,9 @@ class Environment {
             PrintList_1.printlist.push("Error, La variable " + id + " ya existe en el entorno, linea " + linea + " y columna " + columna);
         }
     }
+    getName() {
+        return this.nameenv;
+    }
     getVar(id) {
         //verificar si el amiente no es nulo
         let env = this;

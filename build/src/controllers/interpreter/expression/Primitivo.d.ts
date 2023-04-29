@@ -5,4 +5,8 @@ export declare class Primitivo extends Expression {
     private tipo;
     constructor(line: number, column: number, value: any, tipo: Type);
     execute(): Return;
+    AST(): {
+        rama: string;
+        nodo: string;
+    };
 }

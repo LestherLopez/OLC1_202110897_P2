@@ -9,4 +9,8 @@ export declare class Function extends Instruction {
     statement: Instruction;
     constructor(tipo: Type, id: string, parametros: Array<Expression>, statement: Instruction, line: number, column: number);
     execute(env: Environment): void;
+    AST(): {
+        rama: string;
+        nodo: string;
+    };
 }

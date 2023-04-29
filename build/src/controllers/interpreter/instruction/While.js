@@ -18,6 +18,9 @@ class While extends Instruction_1.Instruction {
             condicional = this.exp.execute(environment_while);
         }
     }
+    AST() {
+        return { rama: "", nodo: "" };
+    }
 }
 exports.While = While;
 //hace falta meter valores de AST en el execute ya cuando se tenga el AST

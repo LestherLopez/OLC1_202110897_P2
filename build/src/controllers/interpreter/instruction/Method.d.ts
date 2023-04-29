@@ -7,4 +7,8 @@ export declare class Method extends Instruction {
     statement: Instruction;
     constructor(id: string, parametros: Array<Expression>, statement: Instruction, line: number, column: number);
     execute(env: Environment): void;
+    AST(): {
+        rama: string;
+        nodo: string;
+    };
 }

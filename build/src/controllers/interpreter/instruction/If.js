@@ -25,6 +25,9 @@ class If extends Instruction_1.Instruction {
             this.sentencias_else.execute(else_environment, "else");
         }
     }
+    AST() {
+        return { rama: "", nodo: "" };
+    }
 }
 exports.If = If;
 /*
