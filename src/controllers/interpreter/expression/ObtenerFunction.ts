@@ -1,5 +1,6 @@
 import { Expression } from "../abstract/Expression";
 import { Environment } from "../abstract/Environment";
+import { Type } from "../abstract/Return";
 
 
 export class ObtenerFunction extends Expression {
@@ -32,6 +33,9 @@ export class ObtenerFunction extends Expression {
               }
               // ejecutar el cuerpo de la funcion
               funcion.statement.execute(envFun, this.id);
+     
+             
+
             } else {
               console.log("Error, La funcion " + this.id + " no tiene la cantidad de parametros correcta, linea " + this.line + " y columna " + this.column);
             }

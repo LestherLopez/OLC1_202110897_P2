@@ -29,11 +29,19 @@ export class For extends Instruction{
         let environment_for =  new Environment(env, "for");
         while(exp_condicional.value){
             this.sentencias.execute(environment_for, "for");    
+            
             this.exp_actualizacion.execute(environment_for);
             exp_condicional = this.exp_condicional.execute(environment_for);
         }    
 
-        
+        /*if(element.type == Type.RETURN){
+                return element;
+            }else if(element.type == Type.BREAK){
+                break;
+            }else if(element.type == Type.CONTINUE){
+                this.incremento.execute(env);
+                continue;
+            }*/
         }  
         public AST(): {rama: string, nodo:string} {
             return {rama: "", nodo:""}

@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { printlist } from "./interpreter/Reports/PrintList";
 import { Environment } from "./interpreter/abstract/Environment";
 import { ListaTabla, TablaSimbolos } from "./interpreter/Reports/TablaSimbolos";
-import { ListaTablaErrores } from "./interpreter/Reports/TablaErrores";
+import { ListaTablaErrores, ListaTablaErroresLexicos } from "./interpreter/Reports/TablaErrores";
 // creando una clase controlador
 
 class InterpreteController {
@@ -65,20 +65,33 @@ class InterpreteController {
           //console.log(simboloscode);
           idsAgregados.clear();  
           //codigo para tabla de errores
+  
           let errorescode =  `digraph cola {\n
             parent [shape=plaintext,\n
             label=<\n
             <table border='1' cellborder='1'>\n
             <tr><td>#</td><td>Tipo de error</td><td>Descripción</td><td>Linea</td><td>Columna</td></tr>\n`;   
-            for (let i = 0; i < ListaTablaErrores.length; i++) {
+             let contador = 1;
+            for(const filase of ListaTablaErrores){
 
+              errorescode+=`<tr><td>${contador}</td><td>${filase.tipo_error}</td> <td>${filase.descripcion}</td><td>${filase.linea}</td><td>${filase.columna}</td></tr>\n`
+              contador++;
+            }
+            /*  for (let i = 0; i < ListaTablaErrores.length; i++) {
+              console.log("a");
               errorescode+=`<tr><td>${(i+1).toString()}</td><td>${ListaTablaErrores[i].tipo_error}</td> <td>${ListaTablaErrores[i].descripcion}</td><td>${ListaTablaErrores[i].linea}</td><td>${ListaTablaErrores[i].columna}</td></tr>\n`
-            } 
-         
+            } */
+           
+            for(const filase of ListaTablaErroresLexicos){
+
+              errorescode+=`<tr><td>${contador}</td><td>${filase.tipo_error}</td> <td>${filase.descripcion}</td><td>${filase.linea}</td><td>${filase.columna}</td></tr>\n`
+              contador++;
+            }
+            contador= 1;
             errorescode += ` </table>
                                   >];
                         }`
-            console.log(errorescode );
+          //  console.log(errorescode );
         res.json({ consola:printlist.join("\n"), errores: errorescode, ast: astcode, simbolos: simboloscode });
 
       } catch (error) {

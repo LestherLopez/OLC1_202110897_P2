@@ -22,6 +22,14 @@ class For extends Instruction_1.Instruction {
             this.exp_actualizacion.execute(environment_for);
             exp_condicional = this.exp_condicional.execute(environment_for);
         }
+        /*if(element.type == Type.RETURN){
+                return element;
+            }else if(element.type == Type.BREAK){
+                break;
+            }else if(element.type == Type.CONTINUE){
+                this.incremento.execute(env);
+                continue;
+            }*/
     }
     AST() {
         return { rama: "", nodo: "" };

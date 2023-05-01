@@ -1,3 +1,40 @@
+%{
+  // importar tipos
+  const {Type} = require('./abstract/Return');
+  const {Primitivo} = require('./expression/Primitivo');
+  const {Print} = require('./instruction/Print');
+  const {Todeclare} = require('./instruction/Todeclare');
+  const {Access} = require('./expression/Access');
+  const {Arithmetic} = require('./expression/Arithmetic');
+  const {TipoAritmetica} = require('./utils/TipoAritmetica');
+  const {Logic} = require('./expression/Logic');
+  const {TipoLogica} = require('./utils/TipoLogica');
+  const {Relational} = require('./expression/Relational');
+  const {TipoRelacional} = require('./utils/TipoRelacional');
+  const {Statement} = require('./instruction/Statement');
+  const {Function} = require('./instruction/Function');
+  const {Parameters} = require('./expression/Parameters');
+  const {ObtenerFunction} = require('./expression/ObtenerFunction');
+  const {Assignation} = require('./instruction/Assignation');
+  const {TablaErrores, ListaTablaErrores} = require('./reports/TablaErrores');
+  const {If} = require('./instruction/If');
+  const {While} = require('./instruction/While');
+  const {IncreaseDecrease} = require('./expression/IncreaseDecrease');
+  const {Main} = require('./instruction/Main');
+  const {toLower} = require('./expression/toLower');
+  const {toUpper} = require('./expression/toUpper');
+  const {Length} = require('./expression/Length');
+  const {Truncate} = require('./expression/Truncate');
+  const {Round} = require('./expression/Round');
+  const {Typeof} = require('./expression/Typeof');
+  const {toString} = require('./expression/toString');
+    const {For} = require('./instruction/For');
+    const {DoWhile} = require('./instruction/DoWhile');
+    const {ReturnExp} = require('./expression/ReturnExp');
+    const {ErrorSintactico} = require('./errors/ErrorSintactico');
+    const {ErrorLexico} = require('./errors/ErrorLexico');
+%}
+
 /* Definición Léxica */
 %lex
 
@@ -129,43 +166,15 @@ frac                        (?:\.[0-9]+)
 <<EOF>>                 return 'EOF';
 
 .                       { 
- $$ = ListaTablaErrores.push(new TablaErrores("Léxico", "El caracter "+yytext+" no pertenece al lenguaje",  yylloc.first_lin, yylloc.first_column )); 
+ $$ = new ErrorLexico(yytext,  yylloc.first_line, yylloc.first_column ); 
+ $$.execute();
+   /*
+  ListaTablaErrores.push(new TablaErrores("Léxico", "El caracter "+yytext+" no pertenece al lenguaje",  yylloc.first_line, yylloc.first_column));
+  console.log(new TablaErrores("Léxico", "El caracter "+yytext+" no pertenece al lenguaje",  yylloc.first_line, yylloc.first_column ))*/
   console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); }
 /lex
 
-%{
-  // importar tipos
-  const {Type} = require('./abstract/Return');
-  const {Primitivo} = require('./expression/Primitivo');
-  const {Print} = require('./instruction/Print');
-  const {Todeclare} = require('./instruction/Todeclare');
-  const {Access} = require('./expression/Access');
-  const {Arithmetic} = require('./expression/Arithmetic');
-  const {TipoAritmetica} = require('./utils/TipoAritmetica');
-  const {Logic} = require('./expression/Logic');
-  const {TipoLogica} = require('./utils/TipoLogica');
-  const {Relational} = require('./expression/Relational');
-  const {TipoRelacional} = require('./utils/TipoRelacional');
-  const {Statement} = require('./instruction/Statement');
-  const {Function} = require('./instruction/Function');
-  const {Parameters} = require('./expression/Parameters');
-  const {ObtenerFunction} = require('./expression/ObtenerFunction');
-  const {Assignation} = require('./instruction/Assignation');
-  const {TablaErrores, ListaTablaErrores} = require('./reports/TablaErrores');
-  const {If} = require('./instruction/If');
-  const {While} = require('./instruction/While');
-  const {IncreaseDecrease} = require('./expression/IncreaseDecrease');
-  const {Main} = require('./instruction/Main');
-  const {toLower} = require('./expression/toLower');
-  const {toUpper} = require('./expression/toUpper');
-  const {Length} = require('./expression/Length');
-  const {Truncate} = require('./expression/Truncate');
-  const {Round} = require('./expression/Round');
-  const {Typeof} = require('./expression/Typeof');
-  const {toString} = require('./expression/toString');
-    const {For} = require('./instruction/For');
-    const {DoWhile} = require('./instruction/DoWhile');
-%}
+
 
 
 
@@ -235,8 +244,8 @@ INSTRUCCION
   | AGREGARVALORLISTA { $$ = $1; }
   | MODIFICARVALORLISTA { $$ = $1; }
   | ASIGNACION      { $$ = $1; } //asignar valor a una variable declarada
-  | error PTCOMA
-  { $$ = ListaTablaErrores.push(new TablaErrores("Sintáctico", "No se esperaba el identificador "+yytext, this._$.first_line, this._$.first_column ));  
+  | error  { $$= new ErrorSintactico(yytext, @1.first_line, @1.first_column);
+     
     console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 
@@ -256,8 +265,8 @@ DECLARAR
     
 ;
 DRETURN
-  : RRETURN  PTCOMA { $$ = null; }
-  | RRETURN EXPRESION PTCOMA { $$ = $2; }
+  : RRETURN  PTCOMA { $$ = new ReturnExp(null, @1.first_line, @1.first_column ); }
+  | RRETURN EXPRESION PTCOMA { $$ = new ReturnExp($2, @1.first_line, @1.first_column );}
 ;
 ASIGNACION
   :  ID IGUAL EXPRESION PTCOMA      { $$ = new Assignation($1,$3,@1.first_line, @1.first_column ); }

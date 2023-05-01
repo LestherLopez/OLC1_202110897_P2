@@ -10,5 +10,6 @@ var Type;
     Type[Type["STRING"] = 4] = "STRING";
     Type[Type["NULL"] = 5] = "NULL";
     Type[Type["VOID"] = 6] = "VOID";
+    Type[Type["RETURN"] = 7] = "RETURN";
 })(Type = exports.Type || (exports.Type = {}));
 //# sourceMappingURL=Return.js.map

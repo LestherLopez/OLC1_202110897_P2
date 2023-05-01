@@ -5,3 +5,4 @@ export class TablaErrores {
 }
 
 export let ListaTablaErrores:Array<TablaErrores> =[];
+export let ListaTablaErroresLexicos:Array<TablaErrores> =[];

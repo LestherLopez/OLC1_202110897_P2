@@ -5,7 +5,8 @@ export declare enum Type {
     CHAR = 3,
     STRING = 4,
     NULL = 5,
-    VOID = 6
+    VOID = 6,
+    RETURN = 7
 }
 export type Return = {
     value: any;

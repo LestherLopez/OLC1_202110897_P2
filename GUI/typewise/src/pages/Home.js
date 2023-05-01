@@ -13,6 +13,7 @@ function Home(){
     const [consola, setConsola] = useState("");
     const [graphAST, setGraphAST] = useState("");
     const [graphSimbolos, setGraphSimbolos] = useState("");
+    const [graphErrores, setGraphErrores] = useState("");
     //estados de modal para ast
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -22,7 +23,10 @@ function Home(){
     const [shows, setShows] = useState(false);
     const handleCloses = () => setShows(false);
     const handleShows = () => setShows(true);
-
+    //estados de modal para tabla de errores
+    const [showe, setShowe] = useState(false);
+    const handleClosee = () => setShowe(false);
+    const handleShowe = () => setShowe(true);
     const interpretar = async () => {
         console.log("ejecutando")
         try {
@@ -42,6 +46,7 @@ function Home(){
                 setConsola(consola);
                 setGraphAST(ast);
                 setGraphSimbolos(simbolos);
+                setGraphErrores(errores);
             }
         } catch (error) {
             console.log(error);
@@ -78,7 +83,7 @@ function Home(){
                                                                     Reporte AST
                                                                 </Button>{' '}
                     <Button variant="primary" onClick={handleShows}>Reporte Tabla de Simbolos</Button>{' '}               
-                    <Button variant="primary" onClick={handleShow}>Reporte Tabla de Errores</Button>{' '}                              
+                    <Button variant="primary" onClick={handleShowe}>Reporte Tabla de Errores</Button>{' '}                              
                 </Col>
             </Row>
             
@@ -132,7 +137,29 @@ function Home(){
       </Modal>
            
             
+      <Modal show={showe} onHide={handleClosee}  style={{ zIndex: 9999 }}>
+      <div style={{ maxWidth: "80vw", margin: "auto" }}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+                        <div>
+                    <GraphAST dot={graphErrores}
+                            />
+                            </div>
 
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClosee}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClosee}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+        </div>
+      </Modal>
 
 
            
