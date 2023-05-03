@@ -20,7 +20,7 @@ class Assignation extends Instruction_1.Instruction {
         variable.valor = valor_asignar.value;
     }
     AST() {
-        const id = Math.floor(Math.random() * 100) + 1;
+        const id = Math.floor(Math.random() * 300) + 1;
         //generar nodo
         const nodoPrincipal = `nodoAsignacion${id.toString()}`;
         const nodoIdPrincipal = `nodoIdAsignacion${id.toString()}`;

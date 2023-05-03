@@ -29,6 +29,7 @@ class InterpreteController {
         printlist.splice(0, printlist.length);
         ListaTabla.splice(0, ListaTabla.length);
         ListaTablaErrores.splice(0, ListaTablaErrores.length);
+        
         //crear entorno que almacena variables
         const globalEnv = new Environment(null, "global");
         //recorrer y ejecutar instrucciones del entorno
@@ -92,6 +93,8 @@ class InterpreteController {
                                   >];
                         }`
           //  console.log(errorescode );
+       //   console.log(astcode)
+       ListaTablaErroresLexicos.splice(0, ListaTablaErroresLexicos.length);
         res.json({ consola:printlist.join("\n"), errores: errorescode, ast: astcode, simbolos: simboloscode });
 
       } catch (error) {

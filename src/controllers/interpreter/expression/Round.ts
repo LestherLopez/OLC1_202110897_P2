@@ -29,6 +29,19 @@ export class Round extends Expression {
    return { value: null, type: Type.NULL };
   }
   public AST(): {rama: string, nodo:string} {
-    return {rama: "", nodo:""}
+    //numero de id del nodo Round
+   const id = Math.floor(Math.random() * 300) + 1;
+   //agregar el id a nodoRound
+   const nombreNodo = 'nodoRound'+id.toString();
+   //agregar label a nodoRound
+   let ramaRound = nombreNodo+`[label="Round"];\n`
+   //obtener nodo y rama de expresion
+   const codeRama : {rama: string, nodo:string} = this.expression.AST();
+   //agregar a la rama de Round las ramas de expresion
+   ramaRound += codeRama.rama;
+   //agregar a la rama de Round la conexion de Round a expresion
+   ramaRound += nombreNodo+"->"+codeRama.nodo+`;\n`
+   
+   return {rama: ramaRound, nodo:nombreNodo}
 }
 }

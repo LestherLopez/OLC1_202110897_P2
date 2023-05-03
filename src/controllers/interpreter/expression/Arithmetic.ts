@@ -303,6 +303,36 @@ export class Arithmetic extends Expression {
     return { value: null, type: Type.NULL };
   }
   public AST(): {rama: string, nodo:string} {
-    return {rama: "", nodo:""}
-}
+            const id = Math.floor(Math.random() * 100) + 1;
+            const nombreNodo = 'nodoAritmetica'+id.toString();
+            let ramaaritmetica = nombreNodo+`[label="Aritmetica"];\n`
+            if(this.tipoOperacion==TipoAritmetica.MENOSUNARIO){
+              const idRama = Math.floor(Math.random() * 100) + 1;
+            const codeRamas = 'nodoAritmetica'+idRama.toString();
+            let nodoVar = codeRamas+`[label="MENOSUNARIO"];\n`
+          
+            ramaaritmetica += nodoVar;
+   
+            ramaaritmetica += nombreNodo+"->"+codeRamas+`;\n`
+              const codeRama : {rama: string, nodo:string} = this.izquierdo.AST();
+              ramaaritmetica += codeRama.rama;
+              ramaaritmetica += nombreNodo+"->"+codeRama.nodo+`;\n`
+            }else{
+            const codeRama : {rama: string, nodo:string} = this.izquierdo.AST();
+            ramaaritmetica += codeRama.rama;
+            ramaaritmetica += nombreNodo+"->"+codeRama.nodo+`;\n`
+            const idRama = Math.floor(Math.random() * 100) + 1;
+            const codeRamas = 'nodoAritmetica'+idRama.toString();
+            let nodoVar = codeRamas+`[label="${TipoAritmetica[this.tipoOperacion]}"];\n`
+     
+            ramaaritmetica += nodoVar;
+   
+            ramaaritmetica += nombreNodo+"->"+codeRamas+`;\n`
+            const codeRamaact : {rama: string, nodo:string} = this.derecho.AST();
+            ramaaritmetica += codeRamaact.rama;
+            ramaaritmetica += nombreNodo+"->"+codeRamaact.nodo+`;\n`
+            }
+
+            return {rama: ramaaritmetica, nodo:nombreNodo}
+        }
 }

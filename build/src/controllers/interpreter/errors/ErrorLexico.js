@@ -8,11 +8,9 @@ class ErrorLexico extends Instruction_1.Instruction {
         super(line, column);
         this.error = error;
     }
-    execute(env) {
+    execute() {
         // guardar la funcion en entorno
-        console.log("entra a error lex");
-        TablaErrores_1.ListaTablaErrores.push(new TablaErrores_1.TablaErrores("Sintáctico", "No se esperaba el identificador " + this.error, this.line, this.column));
-        TablaErrores_1.ListaTablaErrores.push(new TablaErrores_1.TablaErrores("Léxico", "El caracter " + this.error + " no pertenece al lenguaje", this.line, this.column));
+        TablaErrores_1.ListaTablaErroresLexicos.push(new TablaErrores_1.TablaErrores("Léxico", "El caracter " + this.error + " no pertenece al lenguaje", this.line, this.column));
     }
     AST() {
         //crear nodo de funcion

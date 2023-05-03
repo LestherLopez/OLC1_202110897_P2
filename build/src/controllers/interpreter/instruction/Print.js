@@ -16,7 +16,7 @@ class Print extends Instruction_1.Instruction {
     }
     AST() {
         //numero de id del nodo print
-        const id = Math.floor(Math.random() * 100) + 1;
+        const id = Math.floor(Math.random() * 300) + 1;
         //agregar el id a nodoprint
         const nombreNodo = 'nodoPrint' + id.toString();
         //agregar label a nodoPrint

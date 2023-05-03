@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Statement = void 0;
 const Instruction_1 = require("../abstract/Instruction");
 const Environment_1 = require("../abstract/Environment");
-const Return_1 = require("../abstract/Return");
 class Statement extends Instruction_1.Instruction {
     constructor(body, line, column) {
         super(line, column);
@@ -15,17 +14,11 @@ class Statement extends Instruction_1.Instruction {
             try {
                 const element = instrucciones.execute(newEnv, id);
                 if (element != null && element != undefined) {
-                    if (element.type == Return_1.Type.RETURN) {
-                        console.log(element.value);
-                        return element.value;
-                    }
-                    /*  if(ret.type == Type.RETURN){
-                          console.log(ret);
-                          ret.execute(env);
-                          return ret.value
-                      }*/
-                    // console.log(ret.value)
-                    //return ret.value;
+                    // console.log("Statement1")
+                    //  console.log(element.value);
+                    console.log("esta en statement");
+                    console.log(element);
+                    return element;
                 }
                 /*if(element.type == Type.RETURN){
                 return element;
@@ -35,15 +28,6 @@ class Statement extends Instruction_1.Instruction {
                 this.incremento.execute(env);
                 continue;
             }*/
-                // si la instruccion es un return, retornar el valor
-                /*
-                if (ret != null && ret != undefined) {
-                    const funcion = env.getFuncion(id);
-                    if(funcion?.tipo!=Type.VOID){
-                        return ret;
-                    }else{
-                        return ret;
-                    }*/
             }
             catch (e) {
                 //console.log("Errro al ejecutar instrucciones")
@@ -51,7 +35,14 @@ class Statement extends Instruction_1.Instruction {
         }
     }
     AST() {
-        return { rama: "", nodo: "" };
+        let rama = "";
+        let nodo = "";
+        for (let i = 0; i < this.body.length; i++) {
+            let codeRamaact = this.body[i].AST();
+            rama += codeRamaact.rama;
+            nodo += codeRamaact.nodo;
+        }
+        return { rama: rama, nodo: nodo };
     }
 }
 exports.Statement = Statement;

@@ -24,7 +24,20 @@ export class Length extends Expression {
    return { value: null, type: Type.NULL };
   }
   public AST(): {rama: string, nodo:string} {
-    return {rama: "", nodo:""}
+   //numero de id del nodo Length
+   const id = Math.floor(Math.random() * 300) + 1;
+   //agregar el id a nodoLength
+   const nombreNodo = 'nodoLength'+id.toString();
+   //agregar label a nodoLength
+   let ramaLength = nombreNodo+`[label="Length"];\n`
+   //obtener nodo y rama de expresion
+   const codeRama : {rama: string, nodo:string} = this.expression.AST();
+   //agregar a la rama de Length las ramas de expresion
+   ramaLength += codeRama.rama;
+   //agregar a la rama de Length la conexion de Length a expresion
+   ramaLength += nombreNodo+"->"+codeRama.nodo+`;\n`
+   
+   return {rama: ramaLength, nodo:nombreNodo}
 }
 
 }

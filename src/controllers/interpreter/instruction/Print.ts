@@ -20,7 +20,7 @@ export class Print extends Instruction {
   }
   public AST(): {rama: string, nodo:string} {
     //numero de id del nodo print
-    const id = Math.floor(Math.random() * 100) + 1;
+    const id = Math.floor(Math.random() * 300) + 1;
     //agregar el id a nodoprint
     const nombreNodo = 'nodoPrint'+id.toString();
     //agregar label a nodoPrint

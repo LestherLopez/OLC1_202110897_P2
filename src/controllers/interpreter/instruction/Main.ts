@@ -17,7 +17,21 @@ export class Main extends Instruction{
     }
 
     public AST(): {rama: string, nodo:string} {
-        return {rama: "", nodo:""}
+         //numero de id del nodo main
+    const id = Math.floor(Math.random() * 300) + 1;
+    //agregar el id a nodoMain
+    const nombreNodo = 'nodoMain'+id.toString();
+    //agregar label a nodoMain
+    let ramamain = nombreNodo+`[label="main"];\n`
+    //obtener nodo y rama de expresion
+    const codeRama : {rama: string, nodo:string} = this.funcion.AST();
+    //agregar a la rama de main las ramas de expresion
+    ramamain += codeRama.rama;
+    //agregar a la rama de main la conexion de main a expresion
+    ramamain += nombreNodo+"->"+codeRama.nodo+`;\n`
+    
+    return {rama: ramamain, nodo:nombreNodo}
+    return {rama: "", nodo:""}
     }
 
 }

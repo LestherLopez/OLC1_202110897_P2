@@ -22,6 +22,19 @@ export class toString extends Expression {
    return { value: null, type: Type.NULL };
   }
   public AST(): {rama: string, nodo:string} {
-    return {rama: "", nodo:""}
+    //numero de id del nodo ToString
+   const id = Math.floor(Math.random() * 300) + 1;
+   //agregar el id a nodoToString
+   const nombreNodo = 'nodoToString'+id.toString();
+   //agregar label a nodoToString
+   let ramaToString = nombreNodo+`[label="To String"];\n`
+   //obtener nodo y rama de expresion
+   const codeRama : {rama: string, nodo:string} = this.expression.AST();
+   //agregar a la rama de ToString las ramas de expresion
+   ramaToString += codeRama.rama;
+   //agregar a la rama de ToString la conexion de ToString a expresion
+   ramaToString += nombreNodo+"->"+codeRama.nodo+`;\n`
+   
+   return {rama: ramaToString, nodo:nombreNodo}
 }
 }

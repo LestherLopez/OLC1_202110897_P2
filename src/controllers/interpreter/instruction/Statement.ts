@@ -3,7 +3,7 @@ import { Environment } from "../abstract/Environment";
 import { Type } from "../abstract/Return";
 
 export class Statement extends Instruction {
-    constructor(private body:Array<Instruction>, line:number, column:number){
+    constructor(public body:Array<Instruction>, line:number, column:number){
         super(line, column);
     }
 
@@ -14,19 +14,16 @@ export class Statement extends Instruction {
             try{
                 
                 const element = instrucciones.execute(newEnv, id);
+
                 if (element != null && element != undefined) {
-                    if(element.type == Type.RETURN){
-                       console.log(element.value);
-                     
-                        return element.value;
-                      }
-                  /*  if(ret.type == Type.RETURN){
-                        console.log(ret);
-                        ret.execute(env);
-                        return ret.value
-                    }*/
-                   // console.log(ret.value)
-                    //return ret.value;
+             
+                       // console.log("Statement1")
+                     //  console.log(element.value);
+                        console.log("esta en statement");
+                        console.log(element);
+                        return element;
+               
+             
                     
                 }
 
@@ -41,16 +38,7 @@ export class Statement extends Instruction {
             }*/
 
 
-                // si la instruccion es un return, retornar el valor
-                /*
-                if (ret != null && ret != undefined) {
-                    const funcion = env.getFuncion(id);
-                    if(funcion?.tipo!=Type.VOID){
-                        return ret;
-                    }else{
-                        return ret;
-                    }*/
-                  
+           
                 
             }catch(e){
                 //console.log("Errro al ejecutar instrucciones")
@@ -58,6 +46,14 @@ export class Statement extends Instruction {
         }
     }
     public AST(): {rama: string, nodo:string} {
-        return {rama: "", nodo:""}
+         let rama = ""
+         let nodo = ""
+         for (let i = 0; i < this.body.length; i++) {
+            let codeRamaact : {rama: string, nodo:string} = this.body[i].AST();
+            rama+= codeRamaact.rama
+            nodo+= codeRamaact.nodo
+          
+          }
+        return {rama: rama, nodo:nodo}
     }
 }

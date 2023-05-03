@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Relational = void 0;
 const Expression_1 = require("../abstract/Expression");
 const Return_1 = require("../abstract/Return");
+const TipoRelacional_1 = require("../utils/TipoRelacional");
 class Relational extends Expression_1.Expression {
     constructor(izquierdo, derecho, tipoOperacion, line, column) {
         super(line, column);
@@ -141,7 +142,21 @@ class Relational extends Expression_1.Expression {
         return { value: null, type: Return_1.Type.NULL };
     }
     AST() {
-        return { rama: "", nodo: "" };
+        const id = Math.floor(Math.random() * 100) + 1;
+        const nombreNodo = 'nodoRelacional' + id.toString();
+        let ramaRelacional = nombreNodo + `[label="Relacional"];\n`;
+        const codeRama = this.izquierdo.AST();
+        ramaRelacional += codeRama.rama;
+        ramaRelacional += nombreNodo + "->" + codeRama.nodo + `;\n`;
+        const idRama = Math.floor(Math.random() * 100) + 1;
+        const codeRamas = 'nodoRelacional' + idRama.toString();
+        let nodoVar = codeRamas + `[label="${TipoRelacional_1.TipoRelacional[this.tipoOperacion]}"];\n`;
+        ramaRelacional += nodoVar;
+        ramaRelacional += nombreNodo + "->" + codeRamas + `;\n`;
+        const codeRamaact = this.derecho.AST();
+        ramaRelacional += codeRamaact.rama;
+        ramaRelacional += nombreNodo + "->" + codeRamaact.nodo + `;\n`;
+        return { rama: ramaRelacional, nodo: nombreNodo };
     }
 }
 exports.Relational = Relational;

@@ -18,7 +18,19 @@ class toUpper extends Expression_1.Expression {
         return { value: null, type: Return_1.Type.NULL };
     }
     AST() {
-        return { rama: "", nodo: "" };
+        //numero de id del nodo ToUpper
+        const id = Math.floor(Math.random() * 300) + 1;
+        //agregar el id a nodoToUpper
+        const nombreNodo = 'nodoToUpper' + id.toString();
+        //agregar label a nodoToUpper
+        let ramaToUpper = nombreNodo + `[label="To Upper"];\n`;
+        //obtener nodo y rama de expresion
+        const codeRama = this.expression.AST();
+        //agregar a la rama de ToUpper las ramas de expresion
+        ramaToUpper += codeRama.rama;
+        //agregar a la rama de ToUpper la conexion de ToUpper a expresion
+        ramaToUpper += nombreNodo + "->" + codeRama.nodo + `;\n`;
+        return { rama: ramaToUpper, nodo: nombreNodo };
     }
 }
 exports.toUpper = toUpper;

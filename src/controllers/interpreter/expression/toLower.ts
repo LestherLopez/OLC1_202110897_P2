@@ -22,6 +22,19 @@ export class toLower extends Expression {
    return { value: null, type: Type.NULL };
   }
   public AST(): {rama: string, nodo:string} {
-    return {rama: "", nodo:""}
+    //numero de id del nodo ToLower
+   const id = Math.floor(Math.random() * 300) + 1;
+   //agregar el id a nodoToLower
+   const nombreNodo = 'nodoToLower'+id.toString();
+   //agregar label a nodoToLower
+   let ramaToLower = nombreNodo+`[label="To Lower"];\n`
+   //obtener nodo y rama de expresion
+   const codeRama : {rama: string, nodo:string} = this.expression.AST();
+   //agregar a la rama de ToLower las ramas de expresion
+   ramaToLower += codeRama.rama;
+   //agregar a la rama de ToLower la conexion de ToLower a expresion
+   ramaToLower += nombreNodo+"->"+codeRama.nodo+`;\n`
+   
+   return {rama: ramaToLower, nodo:nombreNodo}
 }
 }

@@ -11,5 +11,7 @@ var Type;
     Type[Type["NULL"] = 5] = "NULL";
     Type[Type["VOID"] = 6] = "VOID";
     Type[Type["RETURN"] = 7] = "RETURN";
+    Type[Type["BREAK"] = 8] = "BREAK";
+    Type[Type["CONTINUE"] = 9] = "CONTINUE";
 })(Type = exports.Type || (exports.Type = {}));
 //# sourceMappingURL=Return.js.map

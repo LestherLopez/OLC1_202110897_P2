@@ -37,7 +37,23 @@ class Logic extends Expression_1.Expression {
         return { value: null, type: Return_1.Type.NULL };
     }
     AST() {
-        return { rama: "", nodo: "" };
+        const id = Math.floor(Math.random() * 100) + 1;
+        const nombreNodo = 'nodoLogica' + id.toString();
+        let ramaLogica = nombreNodo + `[label="Operacion Lógica"];\n`;
+        const codeRama = this.izquierdo.AST();
+        ramaLogica += codeRama.rama;
+        ramaLogica += nombreNodo + "->" + codeRama.nodo + `;\n`;
+        const idRama = Math.floor(Math.random() * 100) + 1;
+        const codeRamas = 'nodoLogica' + idRama.toString();
+        let nodoVar = codeRamas + `[label="${TipoLogica_1.TipoLogica[this.tipoOperacion]}"];\n`;
+        //agregar a la rama de Logica las ramas de expresion
+        ramaLogica += nodoVar;
+        //agregar a la rama de Logica la conexion de Logica a expresion
+        ramaLogica += nombreNodo + "->" + codeRamas + `;\n`;
+        const codeRamaact = this.derecho.AST();
+        ramaLogica += codeRamaact.rama;
+        ramaLogica += nombreNodo + "->" + codeRamaact.nodo + `;\n`;
+        return { rama: ramaLogica, nodo: nombreNodo };
     }
 }
 exports.Logic = Logic;

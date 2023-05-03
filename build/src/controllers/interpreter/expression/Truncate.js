@@ -16,7 +16,19 @@ class Truncate extends Expression_1.Expression {
         return { value: null, type: Return_1.Type.NULL };
     }
     AST() {
-        return { rama: "", nodo: "" };
+        //numero de id del nodo Truncate
+        const id = Math.floor(Math.random() * 300) + 1;
+        //agregar el id a nodoTruncate
+        const nombreNodo = 'nodoTruncate' + id.toString();
+        //agregar label a nodoTruncate
+        let ramaTruncate = nombreNodo + `[label="Truncate"];\n`;
+        //obtener nodo y rama de expresion
+        const codeRama = this.expression.AST();
+        //agregar a la rama de Truncate las ramas de expresion
+        ramaTruncate += codeRama.rama;
+        //agregar a la rama de Truncate la conexion de Truncate a expresion
+        ramaTruncate += nombreNodo + "->" + codeRama.nodo + `;\n`;
+        return { rama: ramaTruncate, nodo: nombreNodo };
     }
 }
 exports.Truncate = Truncate;

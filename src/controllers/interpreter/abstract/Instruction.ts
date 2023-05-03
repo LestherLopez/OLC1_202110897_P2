@@ -8,5 +8,5 @@ export abstract class Instruction{
         this.column = column
     }
     public abstract execute(env:Environment, id: string):any;
-    public abstract AST(): {rama: string, nodo:string};
+    public abstract AST(): {rama: string, nodo:string} ;
   }

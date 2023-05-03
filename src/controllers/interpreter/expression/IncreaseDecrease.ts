@@ -54,6 +54,20 @@ export class IncreaseDecrease extends Expression {
     return { value: null, type: Type.NULL };
   }
   public AST(): {rama: string, nodo:string} {
-    return {rama: "", nodo:""}
+    const id = Math.floor(Math.random() * 100) + 1;
+    //agregar el id a nodoincremento
+    const nombreNodo = 'nodoincremento'+id.toString();
+    //agregar label a nodoincremento
+    let ramaincremento = nombreNodo+`[label="Aumento o decremento"];\n`
+    //obtener nodo y rama de expresion
+    const idRama = Math.floor(Math.random() * 100) + 1;
+    const codeRama = 'nodoincremento'+idRama.toString();
+    let nodoVar = codeRama+`[label="${this.izquierdo}"];\n`
+    //agregar a la rama de incremento las ramas de expresion
+    ramaincremento += nodoVar;
+    //agregar a la rama de incremento la conexion de incremento a expresion
+    ramaincremento += nombreNodo+"->"+codeRama+`;\n`
+    
+    return {rama: ramaincremento, nodo:nombreNodo}
 } 
 }

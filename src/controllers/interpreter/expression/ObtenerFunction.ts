@@ -32,8 +32,14 @@ export class ObtenerFunction extends Expression {
                 }
               }
               // ejecutar el cuerpo de la funcion
-              funcion.statement.execute(envFun, this.id);
-     
+              const elemento = funcion.statement.execute(envFun, this.id);
+              console.log(elemento)
+              if(elemento!=undefined){
+                if(elemento.type==Type.RETURN){
+             
+                    return {value:elemento.value, type: elemento.tipo}
+                }
+              }
              
 
             } else {
@@ -45,6 +51,14 @@ export class ObtenerFunction extends Expression {
           }
     }
     public AST(): {rama: string, nodo:string} {
-      return {rama: "", nodo:""}
+      //crear nodoOfuncion y ramaOfuncion
+  const id = Math.floor(Math.random() * 300) + 1;
+  const nombreNodo = 'nodoOfuncion'+id.toString();
+  let ramaOfuncion = nombreNodo+`[label="Llamada funcion"];\n`
+  //agregar nodo del valor
+  ramaOfuncion += "nodoOfuncion"+nombreNodo+"[label=\""+this.id.toString()+"\"];"+`\n`;
+  //conexion de nodo Ofuncion - > nodo de valor
+  ramaOfuncion += nombreNodo+"->"+ "nodoOfuncion"+nombreNodo+`;\n`
+  return {rama: ramaOfuncion, nodo:nombreNodo}
   }
 }

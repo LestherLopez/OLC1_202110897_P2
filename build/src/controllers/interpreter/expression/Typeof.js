@@ -16,7 +16,19 @@ class Typeof extends Expression_1.Expression {
         return { value: null, type: Return_1.Type.NULL };
     }
     AST() {
-        return { rama: "", nodo: "" };
+        //numero de id del nodo Typeof
+        const id = Math.floor(Math.random() * 300) + 1;
+        //agregar el id a nodoTypeof
+        const nombreNodo = 'nodoTypeof' + id.toString();
+        //agregar label a nodoTypeof
+        let ramaTypeof = nombreNodo + `[label="Typeof"];\n`;
+        //obtener nodo y rama de expresion
+        const codeRama = this.expression.AST();
+        //agregar a la rama de Typeof las ramas de expresion
+        ramaTypeof += codeRama.rama;
+        //agregar a la rama de Typeof la conexion de Typeof a expresion
+        ramaTypeof += nombreNodo + "->" + codeRama.nodo + `;\n`;
+        return { rama: ramaTypeof, nodo: nombreNodo };
     }
 }
 exports.Typeof = Typeof;

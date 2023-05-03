@@ -1,15 +1,10 @@
 import { Expression } from "../abstract/Expression";
-import { Type } from "../abstract/Return";
+import { Return } from "../abstract/Return";
 import { Environment } from "../abstract/Environment";
-import { Instruction } from "../abstract/Instruction";
-export declare class ReturnExp extends Instruction {
+export declare class ReturnExp extends Expression {
     value: Expression;
     constructor(value: Expression, line: number, column: number);
-    execute(env: Environment): this | {
-        value: any;
-        type: Type;
-        tipo: Type;
-    };
+    execute(env: Environment): Return;
     AST(): {
         rama: string;
         nodo: string;

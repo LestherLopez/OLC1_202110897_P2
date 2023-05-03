@@ -148,6 +148,21 @@ export class Relational extends Expression {
         return { value: null, type: Type.NULL };
       }  
       public AST(): {rama: string, nodo:string} {
-        return {rama: "", nodo:""}
+        const id = Math.floor(Math.random() * 100) + 1;
+        const nombreNodo = 'nodoRelacional'+id.toString();
+        let ramaRelacional = nombreNodo+`[label="Relacional"];\n`
+        const codeRama : {rama: string, nodo:string} = this.izquierdo.AST();
+        ramaRelacional += codeRama.rama;
+        ramaRelacional += nombreNodo+"->"+codeRama.nodo+`;\n`
+        const idRama = Math.floor(Math.random() * 100) + 1;
+        const codeRamas = 'nodoRelacional'+idRama.toString();
+        let nodoVar = codeRamas+`[label="${TipoRelacional[this.tipoOperacion]}"];\n`
+        ramaRelacional += nodoVar;
+        ramaRelacional += nombreNodo+"->"+codeRamas+`;\n`
+        const codeRamaact : {rama: string, nodo:string} = this.derecho.AST();
+        ramaRelacional += codeRamaact.rama;
+        ramaRelacional += nombreNodo+"->"+codeRamaact.nodo+`;\n`
+   
+        return {rama: ramaRelacional, nodo:nombreNodo}
     }
 } 

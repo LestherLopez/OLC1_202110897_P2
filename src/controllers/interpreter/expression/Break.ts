@@ -2,21 +2,21 @@
 import { Expression } from "../abstract/Expression";
 import { Return, Type } from "../abstract/Return";
 import { Environment } from "../abstract/Environment";
-import { Instruction } from "../abstract/Instruction";
 
 // return 5;
-export class ReturnExp extends Instruction {
+export class ReturnExp extends Expression {
     constructor(public value:Expression, line:number, column:number){
         super(line, column);
     }
 
-    public execute(env: Environment) {
+    public execute(env: Environment):Return {
         if(this.value != null && this.value != undefined){
-            let valuer = this.value.execute(env);
-            
-            return {value:valuer.value, type: Type.RETURN, tipo: valuer.type};
+            const value = this.value.execute(env);
+            console.log("a")
+            console.log(value)
+            return {value:value.value, type: Type.CONTINUE};
         }
-        return this
+        return {value:null, type: Type.CONTINUE};
 
     }
 
@@ -33,6 +33,7 @@ export class ReturnExp extends Instruction {
    ramaReturn += codeRama.rama;
    //agregar a la rama de Return la conexion de Return a expresion
    ramaReturn += nombreNodo+"->"+codeRama.nodo+`;\n`
+   
    return {rama: ramaReturn, nodo:nombreNodo}
     }
 

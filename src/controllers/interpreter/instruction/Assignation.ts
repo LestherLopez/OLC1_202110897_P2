@@ -23,9 +23,9 @@ export class Assignation extends Instruction{
         }
         variable.valor = valor_asignar.value;
     }
-    public AST(): {rama: string, nodo:string} { 
+    public AST(): {rama: string, nodo:string}   { 
 
-    const id = Math.floor(Math.random() * 100) + 1;
+    const id = Math.floor(Math.random() * 300) + 1;
     //generar nodo
     const nodoPrincipal = `nodoAsignacion${id.toString()}`;
     const nodoIdPrincipal = `nodoIdAsignacion${id.toString()}`;

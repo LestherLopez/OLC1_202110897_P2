@@ -41,7 +41,7 @@ export class Todeclare extends Instruction {
   }
   public AST(): {rama: string, nodo:string} {
     //generar nodo de declarar 
-    const id = Math.floor(Math.random() * 100) + 1;
+   const id = Math.floor(Math.random() * 300) + 1;
     const nodoPrincipal = `nodoDeclarar${id.toString()}`;
     //nodo del id de variable
     const nodoIdPrincipal = `nodoId${id.toString()}`;

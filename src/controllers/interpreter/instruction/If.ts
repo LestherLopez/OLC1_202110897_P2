@@ -14,62 +14,78 @@ export class If extends Instruction{
         this.sentencias_else = sentencias_else;
     }
     public execute(env: Environment) {
+      
+
+        
         let condicion = this.exp_condicion.execute(env);
         if(condicion.type!= Type.BOOLEAN){
             return null;
         }
         if(condicion.value){
             let new_environment =  new Environment(env, "null");
-            this.sentencias.execute(new_environment, "if");
-
+            let elemento = this.sentencias.execute(new_environment, "if");
+            if(elemento!=undefined){
+                if(elemento.type==Type.RETURN){
+             
+                    return {value:elemento.value, type: Type.RETURN, tipo:elemento.tipo}
+                }
+              }
+             
         }else{
             let else_environment = new Environment(env, "null");
             this.sentencias_else.execute(else_environment, "else");
         }
     }
     public AST(): {rama: string, nodo:string} {
-        return {rama: "", nodo:""}
+        const id = Math.floor(Math.random() * 300) + 1;
+        const nombreNodo = 'nodoIf'+id.toString();
+        let ramaIf = nombreNodo+`[label="If"];\n`
+
+        const codeRama : {rama: string, nodo:string} = this.exp_condicion.AST();
+        ramaIf += codeRama.rama;
+        ramaIf += nombreNodo+"->"+codeRama.nodo+`;\n`
+
+        const codeRamaIN : {rama: string, nodo:string} = this.sentencias.AST();
+            ramaIf += codeRamaIN.rama;
+            const subramas = codeRamaIN.nodo.split("nodo");
+            for (let i = 1; i < subramas.length; i++) {
+                
+                ramaIf += nombreNodo+"->"+"nodo"+subramas[i]+`;\n`
+            }
+        //bloque else if
+        if(this.sentencias_else!=null || this.sentencias_else!=undefined){
+            if(this.exp_condicion!=null || this.exp_condicion!=undefined){
+                let idelseif = Math.floor(Math.random() * 300) + 1;
+            let nombreNodoelse = 'nodoelseIf'+idelseif.toString();
+            let ramaifelse = nombreNodoelse+`[label="Else"];\n`
+            ramaIf += ramaifelse
+            ramaIf += nombreNodo +"->" +nombreNodoelse+`;\n`
+            //instrucciones else if
+            const codeRamaIN : {rama: string, nodo:string} = this.sentencias_else.AST();
+            ramaIf += codeRamaIN.rama;
+            const subramas = codeRamaIN.nodo.split("nodo");
+            for (let i = 1; i < subramas.length; i++) {
+                
+                ramaIf += nombreNodoelse+"->"+"nodo"+subramas[i]+`;\n`
+            }
+
+
+
+
+
+            }else{
+            let idelseif = Math.floor(Math.random() * 300) + 1;
+            let nombreNodoelse = 'nodoelseIf'+idelseif.toString();
+            let ramaifelse = nombreNodoelse+`[label="Else"];\n`
+            ramaIf += ramaifelse
+            ramaIf += nombreNodo +"->" +nombreNodoelse+`;\n`
+            }
+        }
+        
+
+
+
+
+        return {rama: ramaIf, nodo:nombreNodo}
     }
 }
-/*
-export class If extends Instruccion {
-    
-    exp_condicion   : Expresion;
-    sentencias      : Nodo[];
-    sentencias_else : Nodo[];
-
-    constructor(exp_condicion :Expresion, sentencias :Nodo[], sentencias_else :Nodo[], linea :number, columna :number) {
-        super(linea, columna);
-        this.exp_condicion = exp_condicion;
-        this.sentencias = sentencias;
-        this.sentencias_else = sentencias_else;
-    }
-    
-    public ejecutar(actual: Ambito, global: Ambito, ast: AST) {
-        // Condicion
-        let condicion = this.exp_condicion.getValor(actual, global, ast);
-
-        // Verificar tipo booleano
-        if(this.exp_condicion.tipo.getPrimitivo() != TipoPrimitivo.Boolean) {
-            // * ERROR * 
-            return
-        }
-
-        if ( condicion ){
-            // Crear ambito nuevo
-            let ambito_if = new Ambito(actual);
-
-            for(let sentencia of this.sentencias){
-                if(sentencia instanceof Instruccion) sentencia.ejecutar(ambito_if, global, ast);
-                if(sentencia instanceof Expresion) sentencia.getValor(ambito_if, global, ast);
-            }
-        }else {
-            let ambito_else = new Ambito(actual);
-            for(let sentencia of this.sentencias_else){
-                if(sentencia instanceof Instruccion) sentencia.ejecutar(ambito_else, global, ast);
-                if(sentencia instanceof Expresion) sentencia.getValor(ambito_else, global, ast);
-            }
-        }
-    }
-
-}*/

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ObtenerFunction = void 0;
 const Expression_1 = require("../abstract/Expression");
 const Environment_1 = require("../abstract/Environment");
+const Return_1 = require("../abstract/Return");
 class ObtenerFunction extends Expression_1.Expression {
     constructor(id, argumentos, line, column) {
         super(line, column);
@@ -33,7 +34,13 @@ class ObtenerFunction extends Expression_1.Expression {
                     }
                 }
                 // ejecutar el cuerpo de la funcion
-                funcion.statement.execute(envFun, this.id);
+                const elemento = funcion.statement.execute(envFun, this.id);
+                console.log(elemento);
+                if (elemento != undefined) {
+                    if (elemento.type == Return_1.Type.RETURN) {
+                        return { value: elemento.value, type: elemento.tipo };
+                    }
+                }
             }
             else {
                 console.log("Error, La funcion " + this.id + " no tiene la cantidad de parametros correcta, linea " + this.line + " y columna " + this.column);
@@ -44,7 +51,15 @@ class ObtenerFunction extends Expression_1.Expression {
         }
     }
     AST() {
-        return { rama: "", nodo: "" };
+        //crear nodoOfuncion y ramaOfuncion
+        const id = Math.floor(Math.random() * 300) + 1;
+        const nombreNodo = 'nodoOfuncion' + id.toString();
+        let ramaOfuncion = nombreNodo + `[label="Llamada funcion"];\n`;
+        //agregar nodo del valor
+        ramaOfuncion += "nodoOfuncion" + nombreNodo + "[label=\"" + this.id.toString() + "\"];" + `\n`;
+        //conexion de nodo Ofuncion - > nodo de valor
+        ramaOfuncion += nombreNodo + "->" + "nodoOfuncion" + nombreNodo + `;\n`;
+        return { rama: ramaOfuncion, nodo: nombreNodo };
     }
 }
 exports.ObtenerFunction = ObtenerFunction;

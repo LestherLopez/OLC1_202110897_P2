@@ -61,7 +61,6 @@ class InterpreteController {
                 //console.log(simboloscode);
                 idsAgregados.clear();
                 //codigo para tabla de errores
-                console.log(TablaErrores_1.ListaTablaErrores.length);
                 let errorescode = `digraph cola {\n
             parent [shape=plaintext,\n
             label=<\n
@@ -72,15 +71,21 @@ class InterpreteController {
                     errorescode += `<tr><td>${contador}</td><td>${filase.tipo_error}</td> <td>${filase.descripcion}</td><td>${filase.linea}</td><td>${filase.columna}</td></tr>\n`;
                     contador++;
                 }
-                contador = 1;
                 /*  for (let i = 0; i < ListaTablaErrores.length; i++) {
                   console.log("a");
                   errorescode+=`<tr><td>${(i+1).toString()}</td><td>${ListaTablaErrores[i].tipo_error}</td> <td>${ListaTablaErrores[i].descripcion}</td><td>${ListaTablaErrores[i].linea}</td><td>${ListaTablaErrores[i].columna}</td></tr>\n`
                 } */
+                for (const filase of TablaErrores_1.ListaTablaErroresLexicos) {
+                    errorescode += `<tr><td>${contador}</td><td>${filase.tipo_error}</td> <td>${filase.descripcion}</td><td>${filase.linea}</td><td>${filase.columna}</td></tr>\n`;
+                    contador++;
+                }
+                contador = 1;
                 errorescode += ` </table>
                                   >];
                         }`;
-                console.log(errorescode);
+                //  console.log(errorescode );
+                //   console.log(astcode)
+                TablaErrores_1.ListaTablaErroresLexicos.splice(0, TablaErrores_1.ListaTablaErroresLexicos.length);
                 res.json({ consola: PrintList_1.printlist.join("\n"), errores: errorescode, ast: astcode, simbolos: simboloscode });
             }
             catch (error) {

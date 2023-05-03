@@ -33,7 +33,7 @@ class Todeclare extends Instruction_1.Instruction {
     }
     AST() {
         //generar nodo de declarar 
-        const id = Math.floor(Math.random() * 100) + 1;
+        const id = Math.floor(Math.random() * 300) + 1;
         const nodoPrincipal = `nodoDeclarar${id.toString()}`;
         //nodo del id de variable
         const nodoIdPrincipal = `nodoId${id.toString()}`;

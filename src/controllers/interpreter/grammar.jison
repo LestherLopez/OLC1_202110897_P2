@@ -144,10 +144,10 @@ frac                        (?:\.[0-9]+)
 /* Espacios en blanco */
 [ \r\t]+            {}                      // espacio en blanco
 \n                  {}                      // salto
-(\/\/).*                             {}     // comentario linea
-[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]  {}     // comentario multilinea
+"//".*                // comment a line
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] // comment multiple lines
 
-[a-zA-Z][a-zA-Z0-9_]*   return 'ID';
+[a-zA-Z][a-zA-Z0-9_ñÑ]*   return 'ID';
 {int}{frac}\b     return 'DECIMAL';
 [0-9]+\b                return 'ENTERO';
 \'((\\\')|[^\n\'])*\'	{ yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }
@@ -239,6 +239,8 @@ INSTRUCCION
   | VECTOR  { $$ = $1; }
   | MODIFICARVECTOR { $$ = $1; }
   | DRETURN  { $$ = $1; }
+  | CONTINUE PTCOMA { $$ = $1; }
+  | BREAK PTCOMA{ $$ = $1; }
   | LISTA { $$ = $1; }
   | MAIN LLAMAR_FUNCION PTCOMA {$$= new Main($2, @1.first_line, @1.first_column);}
   | AGREGARVALORLISTA { $$ = $1; }
@@ -384,7 +386,11 @@ EXPRESION
   | ACCEDERVECTOR                      { $$ = $1; }
   | ACCEDERLISTA                      { $$ = $1; }
   | OPERADORTERNARIO                   { $$ = $1; }
-       
+    | DIF                { $$ = $1; }
+    | DFOR                    { $$ = $1; }
+  | DWHILE                { $$ = $1; }
+
+  | WHILE                { $$ = $1; }
 ;   
 
 //GRAMATICA PARA LLAMAR A UNA FUNCION

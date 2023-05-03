@@ -1,20 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReturnExp = void 0;
+const Expression_1 = require("../abstract/Expression");
 const Return_1 = require("../abstract/Return");
-const Instruction_1 = require("../abstract/Instruction");
 // return 5;
-class ReturnExp extends Instruction_1.Instruction {
+class ReturnExp extends Expression_1.Expression {
     constructor(value, line, column) {
         super(line, column);
         this.value = value;
     }
     execute(env) {
         if (this.value != null && this.value != undefined) {
-            let valuer = this.value.execute(env);
-            return { value: valuer.value, type: Return_1.Type.RETURN, tipo: valuer.type };
+            const value = this.value.execute(env);
+            console.log("a");
+            console.log(value);
+            return { value: value.value, type: Return_1.Type.CONTINUE };
         }
-        return this;
+        return { value: null, type: Return_1.Type.CONTINUE };
     }
     AST() {
         //numero de id del nodo Return
@@ -33,4 +35,4 @@ class ReturnExp extends Instruction_1.Instruction {
     }
 }
 exports.ReturnExp = ReturnExp;
-//# sourceMappingURL=ReturnExp.js.map
+//# sourceMappingURL=Break.js.map
