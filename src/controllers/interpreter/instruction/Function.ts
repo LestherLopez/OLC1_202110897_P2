@@ -25,43 +25,38 @@ export class Function extends Instruction{
             const id = Math.floor(Math.random() * 300) + 1;
             const nombreNodo = 'nodoFuncion'+id.toString();
             let ramaFuncion = nombreNodo+`[label="Metodo"];\n`
-           
-
+            //nodo tipo de funcion
             const idRama = Math.floor(Math.random() * 100) + 1;
             const codeRamas = 'nodoTipoFuncion'+idRama.toString();
             let nodoVar = codeRamas+`[label="${Type[this.tipo]}"];\n`
             ramaFuncion += nodoVar;
             ramaFuncion += nombreNodo +"->"+codeRamas+";";
-            
-
+            //nodo id de la funcion
             const idvar = Math.floor(Math.random() * 100) + 1;
             const codevar = 'nodovarfuncion'+idvar.toString();
             let nodoVari = codevar+`[label="${this.id}"];\n`
             ramaFuncion += nodoVari;
             ramaFuncion += codeRamas +"->"+codevar+";";
-            
-
+            //nodo de "parametros"
             const idpar = Math.floor(Math.random() * 100) + 1;
             const codepar = 'nodoTipoFuncion'+idpar.toString();
             let nodpar = codepar+`[label="parametros"];\n`
             ramaFuncion += nodpar;
             ramaFuncion += nombreNodo +"->"+codepar+";";
-
-            
+            //nodos de los parametros
             for (let i = 0; i < this.parametros.length; i++) {
             const codeRamaIN : {rama: string, nodo:string} = this.parametros[i].AST();
                 ramaFuncion+=codeRamaIN.rama
                 ramaFuncion+=codepar+"->"+codeRamaIN.nodo+";"
             }
-            //statement de metodo
+            //nodo de "instrucciones" 
             const idstatement = Math.floor(Math.random() * 100) + 1;
             const codestatement = 'nodoTipoFuncion'+idstatement.toString();
             let nodostatement = codestatement+`[label="Instrucciones"];\n`
             ramaFuncion += nodostatement;
             ramaFuncion += nombreNodo +"->"+codestatement+";";
 
-
-
+            //nodos de instrucciones  de metodo
             const codeRamaSta : {rama: string, nodo:string} = this.statement.AST();
             ramaFuncion += codeRamaSta.rama;
             const subramas = codeRamaSta.nodo.split("nodo");
@@ -69,8 +64,6 @@ export class Function extends Instruction{
                 
                 ramaFuncion += codestatement+"->"+"nodo"+subramas[i]+`;\n`
             }
-
-
 
             return {rama: ramaFuncion, nodo:nombreNodo}
         }else{

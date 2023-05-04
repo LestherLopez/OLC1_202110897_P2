@@ -93,7 +93,7 @@ function Home(){
 
         <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Grafica AST</Modal.Title>
         </Modal.Header>
         <Modal.Body>
                         <div>
@@ -115,7 +115,7 @@ function Home(){
       <Modal show={shows} onHide={handleCloses}  style={{ zIndex: 9999 }}>
       <div style={{ maxWidth: "80vw", margin: "auto" }}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Tabla de simbolos</Modal.Title>
         </Modal.Header>
         <Modal.Body>
                         <div>
@@ -140,7 +140,7 @@ function Home(){
       <Modal show={showe} onHide={handleClosee}  style={{ zIndex: 9999 }}>
       <div style={{ maxWidth: "80vw", margin: "auto" }}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Tabla de Errores</Modal.Title>
         </Modal.Header>
         <Modal.Body>
                         <div>

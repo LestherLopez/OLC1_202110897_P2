@@ -22,18 +22,31 @@ export class ReturnExp extends Instruction {
 
     public AST(): {rama: string, nodo:string} {
         //numero de id del nodo Return
-   const id = Math.floor(Math.random() * 300) + 1;
+    if(this.value== null || this.value==undefined){
+
+    
+   const id = Math.floor(Math.random() * 500) + 1;
    //agregar el id a nodoReturn
    const nombreNodo = 'nodoReturn'+id.toString();
    //agregar label a nodoReturn
    let ramaReturn = nombreNodo+`[label="Return"];\n`
    //obtener nodo y rama de expresion
-   const codeRama : {rama: string, nodo:string} = this.value.AST();
-   //agregar a la rama de Return las ramas de expresion
-   ramaReturn += codeRama.rama;
-   //agregar a la rama de Return la conexion de Return a expresion
-   ramaReturn += nombreNodo+"->"+codeRama.nodo+`;\n`
+
    return {rama: ramaReturn, nodo:nombreNodo}
+    }else{
+        const id = Math.floor(Math.random() * 500) + 1;
+        //agregar el id a nodoReturn
+        const nombreNodo = 'nodoReturn'+id.toString();
+        //agregar label a nodoReturn
+        let ramaReturn = nombreNodo+`[label="Return"];\n`
+        //obtener nodo y rama de expresion
+        const codeRama : {rama: string, nodo:string} = this.value.AST();
+        //agregar a la rama de Return las ramas de expresion
+        ramaReturn += codeRama.rama;
+        //agregar a la rama de Return la conexion de Return a expresion
+        ramaReturn += nombreNodo+"->"+codeRama.nodo+`;\n`
+        return {rama: ramaReturn, nodo:nombreNodo}
+    }
     }
 
 }

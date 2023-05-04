@@ -3,7 +3,7 @@ import React from 'react';
 function GraphAST({dot}) {
 
    
-    return <Graphviz dot={dot} />
+    return <Graphviz dot={dot} options={{ engine:"dot"}}/>
     
 };
 

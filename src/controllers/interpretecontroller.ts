@@ -78,10 +78,6 @@ class InterpreteController {
               errorescode+=`<tr><td>${contador}</td><td>${filase.tipo_error}</td> <td>${filase.descripcion}</td><td>${filase.linea}</td><td>${filase.columna}</td></tr>\n`
               contador++;
             }
-            /*  for (let i = 0; i < ListaTablaErrores.length; i++) {
-              console.log("a");
-              errorescode+=`<tr><td>${(i+1).toString()}</td><td>${ListaTablaErrores[i].tipo_error}</td> <td>${ListaTablaErrores[i].descripcion}</td><td>${ListaTablaErrores[i].linea}</td><td>${ListaTablaErrores[i].columna}</td></tr>\n`
-            } */
            
             for(const filase of ListaTablaErroresLexicos){
 
@@ -93,7 +89,7 @@ class InterpreteController {
                                   >];
                         }`
           //  console.log(errorescode );
-       //   console.log(astcode)
+          console.log(astcode)
        ListaTablaErroresLexicos.splice(0, ListaTablaErroresLexicos.length);
         res.json({ consola:printlist.join("\n"), errores: errorescode, ast: astcode, simbolos: simboloscode });
 
