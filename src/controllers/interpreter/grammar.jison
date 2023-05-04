@@ -10,6 +10,7 @@
   const {Logic} = require('./expression/Logic');
   const {TipoLogica} = require('./utils/TipoLogica');
   const {Relational} = require('./expression/Relational');
+  const {Casteo} = require('./expression/Casteo');
   const {TipoRelacional} = require('./utils/TipoRelacional');
   const {Statement} = require('./instruction/Statement');
   const {Function} = require('./instruction/Function');
@@ -33,6 +34,7 @@
     const {ReturnExp} = require('./expression/ReturnExp');
     const {ErrorSintactico} = require('./errors/ErrorSintactico');
     const {ErrorLexico} = require('./errors/ErrorLexico');
+      
 %}
 
 /* Definición Léxica */
@@ -241,6 +243,7 @@ INSTRUCCION
   | CONTINUE PTCOMA { $$ = $1; }
   | BREAK PTCOMA{ $$ = $1; }
   | LISTA { $$ = $1; }
+
   | MAIN LLAMAR_FUNCION PTCOMA {$$= new Main($2, @1.first_line, @1.first_column);}
   | AGREGARVALORLISTA { $$ = $1; }
   | MODIFICARVALORLISTA { $$ = $1; }
@@ -269,6 +272,7 @@ DRETURN
   : RRETURN  PTCOMA { $$ = new ReturnExp(null, @1.first_line, @1.first_column ); }
   | RRETURN EXPRESION PTCOMA { $$ = new ReturnExp($2, @1.first_line, @1.first_column );}
 ;
+
 ASIGNACION
   :  ID IGUAL EXPRESION PTCOMA      { $$ = new Assignation($1,$3,@1.first_line, @1.first_column ); }
 ;
@@ -353,6 +357,7 @@ MODIFICARVALORLISTA
 
 EXPRESION
   : PRIMITIVO                           { $$ = $1; }
+  
   | EXPRESION MAS EXPRESION             { $$ = new Arithmetic($1,$3,TipoAritmetica.SUMA,@1.first_line, @1.first_column); }
   | EXPRESION MENOS EXPRESION           { $$ = new Arithmetic($1,$3,TipoAritmetica.RESTA,@1.first_line, @1.first_column); }
   | EXPRESION DIVISION EXPRESION        { $$ = new Arithmetic($1,$3,TipoAritmetica.DIVISION,@1.first_line, @1.first_column); }  
@@ -362,6 +367,7 @@ EXPRESION
   | EXPRESION MODULO EXPRESION          { $$ = new Arithmetic($1,$3,TipoAritmetica.MODULO,@1.first_line, @1.first_column); }  
   | ACCEDERID                            { $$ = $1; }
   | LLAMAR_FUNCION                      { $$ = $1; }
+ 
   | PARIZQ EXPRESION PARDER             { $$ = $2;}
   | EXPRESION AND EXPRESION             { $$ = new Logic($1,$3,TipoLogica.AND,@1.first_line, @1.first_column); }  
   | EXPRESION OR EXPRESION              { $$ = new Logic($1,$3,TipoLogica.OR,@1.first_line, @1.first_column); }  
@@ -383,19 +389,28 @@ EXPRESION
   | ACCEDERVECTOR                      { $$ = $1; }
   | ACCEDERLISTA                      { $$ = $1; }
   | OPERADORTERNARIO                   { $$ = $1; }
+  | CAST
+   
     | DIF                { $$ = $1; }
     | DFOR                    { $$ = $1; }
   | DWHILE                { $$ = $1; }
-
+ 
   | WHILE                { $$ = $1; }
+  
 ;   
-
+CAST
+:PARIZQ  TIPO PARDER PRIMITIVO { $$ = new Casteo($2,$4,@1.first_line, @1.first_column); } 
+|PARIZQ  TIPO PARDER ACCEDERID { $$ = new Casteo($2,$4,@1.first_line, @1.first_column); } 
+;
 //GRAMATICA PARA LLAMAR A UNA FUNCION
 LLAMAR_FUNCION 
   : ID PARIZQ LISTA_EXPRESIONES PARDER { $$ = new ObtenerFunction($1,$3,@1.first_line, @1.first_column); }
   | ID PARIZQ PARDER { $$ = new ObtenerFunction($1,[],@1.first_line, @1.first_column); }
 
 ;
+
+
+
 DTOLOWER
   : TOLOWER PARIZQ EXPRESION PARDER   { $$ = new toLower($3,@1.first_line, @1.first_column); }  
 ;
@@ -414,10 +429,12 @@ DROUND
 ;
 DTYPEOF
   : TYPEOF PARIZQ EXPRESION PARDER     { $$ = new Typeof($3,@1.first_line, @1.first_column); }  
+  
 ;
 
 DTOSTRING
   : TOSTRING PARIZQ EXPRESION PARDER     { $$ = new toString($3,@1.first_line, @1.first_column); }  
+
 ;
 
 ACCEDERLISTA
