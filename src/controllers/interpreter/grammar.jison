@@ -144,9 +144,8 @@ frac                        (?:\.[0-9]+)
 /* Espacios en blanco */
 [ \r\t]+            {}                      // espacio en blanco
 \n                  {}                      // salto
-"//".*                // comment a line
-[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] // comment multiple lines
-
+(\/\/).*                             {}     // comentario linea
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]  {}
 [a-zA-Z][a-zA-Z0-9_ñÑ]*   return 'ID';
 {int}{frac}\b     return 'DECIMAL';
 [0-9]+\b                return 'ENTERO';
@@ -316,18 +315,16 @@ CONDICIONINICIALFOR
   : DO BLOQUE_INSTRUCCIONES WHILE PARIZQ EXPRESION PARDER PTCOMA {  $$ = new DoWhile($5, $2, @1.first_line, @1.first_column ); }
 ;
 
-/*
 SWITCHCASE
-  : SWITCH PARIZQ EXPRESION PARDER LLAVEIZQ LISTA_CASOS LLAVEDER
+  : SWITCH PARIZQ EXPRESION PARDER LLAVEIZQ LISTA_CASOS LLAVEDER //expresion, listacasos
 ;
+
 LISTA_CASOS
-  : CASE EXPRESION DOSPUNTOS INSTRUCCIONES_CASE
+	: CASE EXPRESION DOSPUNTOS BLOQUE_INSTRUCCIONES
+	| LISTA_CASOS CASE EXPRESION DOSPUNTOS BLOQUE_INSTRUCCIONES
+	| LISTA_CASOS DEFAULT DOSPUNTOS BLOQUE_INSTRUCCIONES
+
 ;
-INSTRUCCIONES_CASE 
-  :  INSTRUCCIONES   { $$ = new Statement($2,@1.first_line, @1.first_column); }
-  |               { $$ = new Statement([],@1.first_line, @1.first_column); }
-;
-*/
 LISTA_EXPRESIONES
   : LISTA_EXPRESIONES COMA EXPRESION { $1.push($3); $$ = $1; }
   | EXPRESION { $$ = [$1] }

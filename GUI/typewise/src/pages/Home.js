@@ -8,8 +8,11 @@ import Modal from 'react-bootstrap/Modal';
 import { Graphviz } from 'graphviz-react';
 import GraphAST from "../components/report/GraphAST";
 import GraphSimbolos from "../components/report/GraphSimbolos";
+import GraphErrores from "../components/report/GraphErrores";
+import Form from 'react-bootstrap/Form';
 function Home(){
     const [editor, setEditor] = useState("");
+    const [code, setCode] = useState("print('hello world!');");
     const [consola, setConsola] = useState("");
     const [graphAST, setGraphAST] = useState("");
     const [graphSimbolos, setGraphSimbolos] = useState("");
@@ -27,6 +30,18 @@ function Home(){
     const [showe, setShowe] = useState(false);
     const handleClosee = () => setShowe(false);
     const handleShowe = () => setShowe(true);
+    const handleFileChange = (event) => {
+    const files = event.target.files;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setEditor(e.target.result);
+      setCode(e.target.result)
+    };
+    reader.readAsText(files[0]);
+  };
+
+
+
     const interpretar = async () => {
         console.log("ejecutando")
         try {
@@ -56,8 +71,10 @@ function Home(){
 
     return (
         <Container>
+          
             <Row>
                 <Col>
+                
                     <h1>Editor</h1>
                 </Col>
                 <Col>
@@ -67,7 +84,7 @@ function Home(){
             </Row>
             <Row>
                 <Col style={{ textAlign: 'left' }}>
-                    <Editor input={setEditor}/>
+                    <Editor input={setEditor} value={code}/>
                 </Col>
                 
                 <Col style={{ textAlign: 'left' }}>
@@ -83,14 +100,17 @@ function Home(){
                                                                     Reporte AST
                                                                 </Button>{' '}
                     <Button variant="primary" onClick={handleShows}>Reporte Tabla de Simbolos</Button>{' '}               
-                    <Button variant="primary" onClick={handleShowe}>Reporte Tabla de Errores</Button>{' '}                              
+                    <Button variant="primary" onClick={handleShowe}>Reporte Tabla de Errores</Button>{' '}     
+                    <Form.Group controlId="formFileMultiple" className="mb-3">
+        <Form.Label>Carga de Archivo TW</Form.Label>
+        <Form.Control type="file" multiple onChange={handleFileChange}/>
+      </Form.Group>                         
                 </Col>
             </Row>
             
 
             
-
-
+         
         <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Grafica AST</Modal.Title>
@@ -119,7 +139,7 @@ function Home(){
         </Modal.Header>
         <Modal.Body>
                         <div>
-                    <GraphAST dot={graphSimbolos}
+                    <GraphSimbolos dot={graphSimbolos}
                             />
                             </div>
 
@@ -144,7 +164,7 @@ function Home(){
         </Modal.Header>
         <Modal.Body>
                         <div>
-                    <GraphAST dot={graphErrores}
+                    <GraphErrores dot={graphErrores}
                             />
                             </div>
 

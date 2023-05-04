@@ -10,7 +10,7 @@ function Editor(props) {
   }, []);
   return (
     <CodeMirror
-    value="console.log('hello world!');"
+    value={props.value}
     height="200px"
 
     extensions={[javascript({ jsx: true })]}
